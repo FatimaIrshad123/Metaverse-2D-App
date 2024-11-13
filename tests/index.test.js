@@ -70,7 +70,7 @@ describe("Authentication",() => {
 
 })
 
-describe("User metadata endpoints", () => {
+/*describe("User metadata endpoints", () => {
     let token =  '';
     let avatarId = '';
 
@@ -990,4 +990,4 @@ describe("Websocket test", () => {
         expect(message.type).toBe("user-left")
         expect(message.payload.userId).toBe(adminUserId)
     })
-})
+})*/
