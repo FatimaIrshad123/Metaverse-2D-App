@@ -1,26 +1,61 @@
-const { default: axios } = require("axios");
+const axios2 = require("axios");
 
 const BACKEND_URL = "http://localhost:3000"
 const WS_URL = "ws://localhost:3001"
 
+const axios = {
+    post: async (...args) => {
+        try {
+            const res = await axios2.post(...args)
+            return res
+        } catch(e){
+            return e.response
+        }
+    },
+    get: async (...args) => {
+        try {
+            const res = await axios2.get(...args)
+            return res
+        } catch(e){
+            return e.response
+        }
+    },
+    put: async (...args) => {
+        try {
+            const res = await axios2.put(...args)
+            return res
+        } catch(e){
+            return e.response
+        }
+    },
+    delete: async (...args) => {
+        try {
+            const res = await axios2.delete(...args)
+            return res
+        } catch(e){
+            return e.response
+        }
+    }
+}
+
 describe("Authentication",() => {
     test('User is able to sign up only once', async () => {
-        const username = 'fatima' + Math.random();
+        const username = `fatima-${Math.random()}`;
         const password = '123456';
 
-        const response = await axios.post(`${BACKEND_URL}/api/v1/user/signup`,{
+        const response = await axios.post(`${BACKEND_URL}/api/v1/signup`,{
             username,
             password,
             type: 'admin'
         })
-        expect(response.statusCode).toBe(200)
+        expect(response.status).toBe(200)
 
-        const updatedresponse = await axios.post(`${BACKEND_URL}/api/v1/user/signup`,{
+        const updatedresponse = await axios.post(`${BACKEND_URL}/api/v1/signup`,{
             username,
             password,
             type: 'admin'
         })
-        expect(updatedresponse.statusCode).toBe(400)
+        expect(updatedresponse.status).toBe(400)
     });
 
     test('Signup request fails if the username is empty', async () => {
@@ -30,7 +65,7 @@ describe("Authentication",() => {
         const response = await axios.post(`${BACKEND_URL}/api/v1/signup`,{
             password
         })
-        expect(response.statusCode.toBe(400))
+        expect(response.status).toBe(400)
     })
 
     test('Signin succeeds if the username and password are correct', async () => {
@@ -39,7 +74,8 @@ describe("Authentication",() => {
 
        await axios.post(`${BACKEND_URL}/api/v1/signup`,{
             username,
-            password
+            password,
+            type: "admin"
         })
 
         const response = await axios.post(`${BACKEND_URL}/api/v1/signin`,{
@@ -47,8 +83,8 @@ describe("Authentication",() => {
             password
         });
 
-        expoect(response.statusCode).toBe(200)
-        expect(response.body.token).toBeDefined()
+        expect(response.status).toBe(200)
+        expect(response.data.token).toBeDefined()
     })
 
     test('Signin fails if the username and password are incorrect', async () => {
@@ -57,7 +93,8 @@ describe("Authentication",() => {
 
        await axios.post(`${BACKEND_URL}/api/v1/signup`,{
             username,
-            password
+            password,
+            role: "admin"
         })
 
         const response = await axios.post(`${BACKEND_URL}/api/v1/signin`,{
@@ -65,12 +102,12 @@ describe("Authentication",() => {
             password
         });
 
-        expoect(response.statusCode).toBe(403)
+        expect(response.status).toBe(403)
     })
 
 })
 
-/*describe("User metadata endpoints", () => {
+describe("User metadata endpoints", () => {
     let token =  '';
     let avatarId = '';
 
@@ -111,7 +148,7 @@ describe("Authentication",() => {
             }
         });
 
-        expect (response.statusCode).toBe(400)
+        expect (response.status).toBe(400)
     })
 
     test ('User can update their metadata with a right avatar id', async () => {
@@ -123,7 +160,7 @@ describe("Authentication",() => {
             }
         });
         
-        expect (response.statusCode).toBe(200)
+        expect (response.status).toBe(200)
     })
     
     test ('User is not able to update their metadata if the auth header is not present', async () => {
@@ -131,7 +168,7 @@ describe("Authentication",() => {
             avatarId
         });
         
-        expect (response.statusCode).toBe(403)
+        expect (response.status).toBe(403)
     })
 })
 
@@ -307,7 +344,7 @@ describe ("Space information", () => {
                 authorization: `Bearer ${userToken}`
             }
         })
-        expect(response.statusCode).toBe(400)
+        expect(response.status).toBe(400)
     })
 
     test ('User is not able to delete a space that doesnt exist', async () => {
@@ -316,7 +353,7 @@ describe ("Space information", () => {
                 authorization: `Bearer ${userToken}`
             }
         })
-        expect(response.statusCode).toBe(400)
+        expect(response.status).toBe(400)
     })
 
     test ('User is able to delete a space that does exist', async () => {
@@ -334,7 +371,7 @@ describe ("Space information", () => {
             }
         })
 
-        expect(deleteResponse.statusCode).toBe(400)
+        expect(deleteResponse.status).toBe(400)
     })
 
     test ('User should not able to delete a space created by another user', async () => {
@@ -352,7 +389,7 @@ describe ("Space information", () => {
             }
         })
 
-        expect(deleteResponse.statusCode).toBe(400)
+        expect(deleteResponse.status).toBe(400)
     })
 
     test("Admin has no spaces initially", async () => {
@@ -496,7 +533,7 @@ describe ("Arena endpoints", () => {
                 authorization: `Bearer ${userToken}`
             }
         });
-        expect(response.statusCode).toBe(400)
+        expect(response.status).toBe(400)
     })
 
     test("Correct spaceId returns all the elements", async () => {
@@ -541,7 +578,7 @@ describe ("Arena endpoints", () => {
             }
         });
 
-        expect(response.statusCode).toBe(400)
+        expect(response.status).toBe(400)
     })
 
     test("Adding an element works as expected", async () => {
@@ -660,10 +697,10 @@ describe('Admin Endpoints', () => {
             }
         })
 
-         expect(elementResponse.statusCode).toBe(403)
-         expect(mapResponse.statusCode).toBe(403)
-         expect(avatarResponse.statusCode).toBe(403)
-         expect(updateElementResponse.statusCode).toBe(403)
+         expect(elementResponse.status).toBe(403)
+         expect(mapResponse.status).toBe(403)
+         expect(avatarResponse.status).toBe(403)
+         expect(updateElementResponse.status).toBe(403)
     })
 
     test("Admin is able to hit admin Endpoints", async () => {
@@ -709,9 +746,9 @@ describe('Admin Endpoints', () => {
             }
         })
 
-         expect(elementResponse.statusCode).toBe(200)
-         expect(mapResponse.statusCode).toBe(200)
-         expect(avatarResponse.statusCode).toBe(200)
+         expect(elementResponse.status).toBe(200)
+         expect(mapResponse.status).toBe(200)
+         expect(avatarResponse.status).toBe(200)
     })  
 
     test ('Admin is able to update the imageUrl for an element', async () => {
@@ -735,7 +772,7 @@ describe('Admin Endpoints', () => {
             }
         })
 
-        expect (updateElementResponse.statusCode).toBe(200)
+        expect (updateElementResponse.status).toBe(200)
     })
 })
 
@@ -990,4 +1027,4 @@ describe("Websocket test", () => {
         expect(message.type).toBe("user-left")
         expect(message.payload.userId).toBe(adminUserId)
     })
-})*/
+})
