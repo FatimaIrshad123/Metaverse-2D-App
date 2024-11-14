@@ -17,7 +17,7 @@ export const UpdateMetadataSchema = z.object({
 
 export const CreateSpaceSchema = z.object({
     name: z.string(),
-    dimensions: z.string().regex(/^[0-9]{1,4}×[0,9]{1,4}$/),
+    dimensions: z.string().regex(/^[0-9]{1,4}x[0-9]{1,4}$/),
     mapId: z.string()
 })
 
@@ -26,6 +26,10 @@ export const AddElementSchema = z.object({
     elementId: z.string(),
     x: z.number(),
     y: z.number()
+})
+
+export const DeleteElementSchema = z.object({
+    id: z.string()
 })
 
 export const CreateElementSchema = z.object({
@@ -46,7 +50,7 @@ export const CreateAvatarSchema = z.object({
 
 export const CreateMapSchema = z.object({
     thumbnail: z.string(),
-    dimensions: z.string().regex(/^[0-9]{1,4}×[0,9]{1,4}$/),
+    dimensions: z.string().regex(/^[0-9]{1,4}x[0-9]{1,4}$/),
     defaultElements: z.array(z.object({
         elementId: z.string(),
         x: z.number(),
