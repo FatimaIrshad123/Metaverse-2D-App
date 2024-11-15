@@ -11,15 +11,22 @@ userRouter.post('/metadata',userMiddleware, async(req,res) => {
         res.status(400).json({message: "Validation failed"})
         return
     }
-    await client.user.update({
-        where: {
-            id: req.userId
-        },
-        data: {
-            avatarId: parsedData.data.avatarId
-        }
-    })
-    res.json({message: "Metadata updated"})
+
+    try{
+        let user = await client.user.update({
+            where: {
+                id: req.userId
+            },
+            data: {
+                avatarId: parsedData.data.avatarId
+            }
+        })
+        res.json({message: "Metadata updated"})
+    }catch(error){
+        console.log(error)
+        res.status(400).json({message: "Internal server error"})
+    }
+    
 })
 
 userRouter.get('/metadata/bulk', async (req,res) => {
@@ -31,12 +38,13 @@ userRouter.get('/metadata/bulk', async (req,res) => {
                 in: userIds
             }
         }, select: {
-            avatar: true
+            avatar: true,
+            id: true
         }
     })
     res.json({
         avatars: metadata.map(n => ({
-            userId: n.avatar?.id,
+            userId: n.id,
             avatarId: n.avatar?.imageUrl
         }))
     })

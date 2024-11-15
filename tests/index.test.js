@@ -53,7 +53,7 @@ describe("Authentication",() => {
             password,
             type: 'admin'
         })
-        console.log(response)
+
         expect(response.status).toBe(200)
         expect(updatedresponse.status).toBe(400)
     });
@@ -105,7 +105,7 @@ describe("Authentication",() => {
 
 })
 
-/*describe("User metadata endpoints", () => {
+describe("User metadata endpoints", () => {
     let token =  '';
     let avatarId = '';
 
@@ -126,7 +126,7 @@ describe("Authentication",() => {
 
         token = response.data.token;
         
-        const avatarResponse = await axios.post(`${BACKEND_URL}/api/v1/avatar`, {
+        const avatarResponse = await axios.post(`${BACKEND_URL}/api/v1/admin/avatar`, {
             "imageUrl": "https://image.com/avatar1.png",
             "name": "Timmy"
         }, {
@@ -134,7 +134,8 @@ describe("Authentication",() => {
                 "authorization": `Bearer ${token}`
             }
         })
-        avatarId = avatarResponse.data.avatarId;
+        
+        avatarId = avatarResponse.data.id;
     })
 
     test ('User cant update their metadata with a wrong avatar id', async () => {
@@ -154,10 +155,9 @@ describe("Authentication",() => {
             avatarId
         },{
             headers: {
-                authorization: `Bearer ${token}`
+                "authorization": `Bearer ${token}`
             }
         });
-        
         expect (response.status).toBe(200)
     })
     
@@ -170,6 +170,7 @@ describe("Authentication",() => {
     })
 })
 
+/*
 describe ("User avatar information", () => {
     let avatarId;
     let token;
@@ -775,7 +776,7 @@ describe('Admin Endpoints', () => {
     })
 })
 
-describe("Websocket test", () => {
+/*describe("Websocket test", () => {
     let adminToken;
     let adminUserId;
     let userToken;

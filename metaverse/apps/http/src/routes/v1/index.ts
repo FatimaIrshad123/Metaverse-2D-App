@@ -23,8 +23,7 @@ router.post('/signup', async (req,res) => {
                 username: parseData.data.username,
                 password: hashedPassword,
                 role: parseData.data.type === "admin"?"Admin": "User"
-            },
-            select: { id: true, username: true, role: true,password: true }
+            }
         })
         res.json({
             userId: user.id
