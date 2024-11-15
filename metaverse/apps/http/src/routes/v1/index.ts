@@ -17,24 +17,23 @@ router.post('/signup', async (req,res) => {
         return
     }
     const hashedPassword = await hash(parseData.data.password)
-
     try {
         const user = await client.user.create({
             data: {
                 username: parseData.data.username,
                 password: hashedPassword,
                 role: parseData.data.type === "admin"?"Admin": "User"
-            }
+            },
+            select: { id: true, username: true, role: true,password: true }
         })
         res.json({
             userId: user.id
         })
     }catch(error){
+        console.log(error)
         res.status(400).json({message: "User already exists"})
     }
-    res.json({
-        message: "Signup"
-    })
+    //res.json({message: "Signup"})
 })
 
 router.post('/signin', async(req,res) => {
@@ -68,17 +67,27 @@ router.post('/signin', async(req,res) => {
     }catch(error){
         res.status(400).json({message: "Internal server error"})
     }
-    res.json({
-        message: "Signin"
-    })
+    //res.json({message: "Signin"})
 })
 
-router.get('/elements', (req,res) => {
-
+router.get('/elements', async(req,res) => {
+    const elements = await client.element.findMany()
+    res.json({elements: elements.map(e => ({
+        id: e.id,
+        imageUrl: e.imageUrl,
+        width: e.width,
+        height: e.height,
+        static: e.static
+    }))})
 })
 
-router.get('/avatars', (req,res) => {
-    
+router.get('/avatars', async(req,res) => {
+    const avatars = await client.avatar.findMany()
+    res.json({avatars: avatars.map(x => ({
+        id: x.id,
+        imageUrl: x.imageUrl,
+        name: x.name
+    }))})
 })
 
 router.use("/user", userRouter)
