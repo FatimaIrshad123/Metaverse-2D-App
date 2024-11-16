@@ -11,9 +11,8 @@ userRouter.post('/metadata',userMiddleware, async(req,res) => {
         res.status(400).json({message: "Validation failed"})
         return
     }
-
     try{
-        let user = await client.user.update({
+        await client.user.update({
             where: {
                 id: req.userId
             },
@@ -42,6 +41,7 @@ userRouter.get('/metadata/bulk', async (req,res) => {
             id: true
         }
     })
+    console.log(metadata)
     res.json({
         avatars: metadata.map(n => ({
             userId: n.id,

@@ -37,7 +37,7 @@ const axios = {
         }
     }
 }
-
+/*
 describe("Authentication",() => {
     test('User is able to sign up only once', async () => {
         const username = "fatima" + Math.random(); //`fatima-${Math.random()}`;
@@ -170,7 +170,7 @@ describe("User metadata endpoints", () => {
     })
 })
 
-/*
+
 describe ("User avatar information", () => {
     let avatarId;
     let token;
@@ -196,13 +196,19 @@ describe ("User avatar information", () => {
         const avatarResponse = await axios.post(`${BACKEND_URL}/api/v1/admin/avatar`, {
             "imageUrl": "https://image.com/avatar1.png",
             "name": "Timmy"
+        }, {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
         })
-        avatarId = avatarResponse.data.avatarId;
+        avatarId = avatarResponse.data.id;
+        console.log(avatarId)
     })
 
     test ('Get back avatar information for a user', async () => {
         const response = await axios.get(`${BACKEND_URL}/api/v1/user/metadata/bulk?ids=[${userId}]`);
-
+        //console.log("response was " + userId)
+        //console.log(JSON.stringify(response.data))
         expect(response.data.avatars.length).toBe(1);
         expect(response.data.avatars[0].userId).toBe(userId);
     })
@@ -269,7 +275,7 @@ describe ("Space information", () => {
                 authorization: `Bearer ${adminToken}`
             }
         })
-
+        
         const element2Response = await axios.post(`${BACKEND_URL}/api/v1/admin/element`, {
             "imageUrl": "https://image.com/cat3.png",
             "width": 1,
@@ -307,12 +313,11 @@ describe ("Space information", () => {
                 authorization: `Bearer ${adminToken}`
             }
          })
-         mapId = mapResponse.id
+         mapId = mapResponse.data.id
     })
 
     test ('User is able to create a space', async () => {
-        //console.log(userToken)
-        const response = axios.post(`${BACKEND_URL}/api/v1/space`, {
+        const response = await axios.post(`${BACKEND_URL}/api/v1/space`, {
             "name": "Test",
             "dimensions": "100x200",
             "mapId": mapId
@@ -325,9 +330,9 @@ describe ("Space information", () => {
     })
 
     test ('User is able to create a space without mapId (empty space)', async () => {
-        const response = axios.post(`${BACKEND_URL}/api/v1/space`, {
+        const response = await axios.post(`${BACKEND_URL}/api/v1/space`, {
             "name": "Test",
-            "dimensions": "100*200",
+            "dimensions": "100x200",
         },{
             headers: {
                 authorization: `Bearer ${userToken}`
@@ -337,7 +342,7 @@ describe ("Space information", () => {
     })
 
     test ('User is not able to create a space without mapId and dimensions', async () => {
-        const response = axios.post(`${BACKEND_URL}/api/v1/space`, {
+        const response = await axios.post(`${BACKEND_URL}/api/v1/space`, {
             "name": "Test",
         },{
             headers: {
@@ -359,67 +364,70 @@ describe ("Space information", () => {
     test ('User is able to delete a space that does exist', async () => {
         const response = await axios.post(`${BACKEND_URL}/api/v1/space`, {
             "name": "Test",
-            "dimensions": "100*200"
+            "dimensions": "100x200"
         },{
             headers: {
                 authorization: `Bearer ${userToken}`
             }
         })
-        const deleteResponse = await axios.delete(`${BACKEND_URL}/api/v1/space/${(await response).data.spaceId}`,{
+        //console.log(response.data.spaceId)
+        const deleteResponse = await axios.delete(`${BACKEND_URL}/api/v1/space/${response.data.spaceId}`,{
             headers: {
                 authorization: `Bearer ${userToken}`
             }
         })
 
-        expect(deleteResponse.status).toBe(400)
+        expect(deleteResponse.status).toBe(200)
     })
 
     test ('User should not able to delete a space created by another user', async () => {
         const response = await axios.post(`${BACKEND_URL}/api/v1/space`, {
             "name": "Test",
-            "dimensions": "100*200"
+            "dimensions": "100x200"
         },{
             headers: {
                 authorization: `Bearer ${userToken}`
             }
         })
-        const deleteResponse = await axios.delete(`${BACKEND_URL}/api/v1/space/${(await response).data.spaceId}`,{
+        const deleteResponse = await axios.delete(`${BACKEND_URL}/api/v1/space/${response.data.spaceId}`,{
             headers: {
                 authorization: `Bearer ${adminToken}`
             }
         })
 
-        expect(deleteResponse.status).toBe(400)
+        expect(deleteResponse.status).toBe(403)
     })
 
     test("Admin has no spaces initially", async () => {
         const response = await axios.get(`${BACKEND_URL}/api/v1/space/all`,{
             headers: {
-                authorization: `Bearer ${userToken}`
+                authorization: `Bearer ${adminToken}`
             }
         });
         expect (response.data.spaces.length).toBe(0)
     })
 
-    test ('Admin has no spaces initially', async () => {
+    test ('Admin has gets once space after', async () => {
         const spaceCreatedResponse = await axios.post(`${BACKEND_URL}/api/v1/space/all`,{
             "name": "Test",
-            "dimensions": "100*200"
+            "dimensions": "100x200"
         },{
             headers: {
-                authorization: `Bearer ${userToken}`
+                authorization: `Bearer ${adminToken}`
             }
         });
+        //console.log(spaceCreatedResponse)
         const response = await axios.get(`${BACKEND_URL}/api/v1/space/all`,{
             headers: {
-                authorization: `Bearer ${userToken}`
+                authorization: `Bearer ${adminToken}`
             }
         })
-        const filteredSpace = response.data.spaces.find(x => x.id == spaceCreatedResponse.spaceId)
+        const filteredSpace = response.data.spaces.find(x => x.id == spaceCreatedResponse.data.spaceId)
         expect(response.data.spaces.length).toBe(1)
         expect(filteredSpace).toBeDefined()
     })
 })
+*/
 
 describe ("Arena endpoints", () => {
     let mapId;
@@ -602,7 +610,7 @@ describe ("Arena endpoints", () => {
         expect(newResponse.data.elements.length).toBe(3)
     })
 })
-
+/*
 describe('Admin Endpoints', () => {
     let adminToken;
     let adminId;

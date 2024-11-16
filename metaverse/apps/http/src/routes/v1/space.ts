@@ -20,9 +20,11 @@ spaceRouter.post('/', userMiddleware, async(req,res) => {
                 creatorId: req.userId!
             }
         });
+        //console.log(parsedData.data.mapId)
         res.json({spaceId: space.id})
+        return
     }
-    const map = await client.map.findUnique({
+    const map = await client.map.findFirst({
         where: {
             id: parsedData.data.mapId
         }, select: {
@@ -35,6 +37,7 @@ spaceRouter.post('/', userMiddleware, async(req,res) => {
         res.status(400).json({message: "Map not found"})
         return
     }
+    //console.log(map)
     let space = await client.$transaction(async () => {
         const space = await client.space.create({
             data: {
@@ -66,7 +69,7 @@ spaceRouter.delete('/:spaceId',userMiddleware, async (req,res) => {
         }
     })
     if (!space) {
-        res.status(403).json({message: "Space not found"})
+        res.status(400).json({message: "Space not found"})
         return
     }
 
