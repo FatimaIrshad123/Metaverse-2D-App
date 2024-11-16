@@ -5,7 +5,7 @@ import client from "@repo/db/client"
 
 export const adminRouter = Router();
 
-adminRouter.post('/element',async(req,res) => {
+adminRouter.post('/element',adminMiddleware, async(req,res) => {
     const parsedData = CreateElementSchema.safeParse(req.body)
     if (!parsedData.success){
         res.status(400).json({message: "Validation failed"})
@@ -19,29 +19,37 @@ adminRouter.post('/element',async(req,res) => {
             imageUrl: parsedData.data.imageUrl
         }    
     })
+    console.log(element.id)
     res.json({
         id: element.id
     })
 })
 
-adminRouter.put('/element/:elementId', async(req,res) => {
+adminRouter.put('/element/:elementId',adminMiddleware, async(req,res) => {
     const parsedData = UpdateElementSchema.safeParse(req.body)
     if (!parsedData.success){
         res.status(400).json({message: "Validation failed"})
         return
     }
-    await client.element.update({
-        where: {
-            id: req.params.elementId
-        },
-        data: {
-            imageUrl: parsedData.data.imageUrl
-        }
-    })
-    res.json({message: "Element updated"})
+   
+    try{
+        await client.element.update({
+            where: {
+                id: req.params.elementId
+            },
+            data: {
+                imageUrl: parsedData.data.imageUrl
+            }
+        })
+        res.json({message: "Element updated"})
+    }catch(error){
+        console.log(error);
+        res.status(400).json({message: "An error occured"})
+    }
+    
 })
 
-adminRouter.post('/avatar', async(req,res) => {
+adminRouter.post('/avatar',adminMiddleware, async(req,res) => {
     const parsedData = CreateAvatarSchema.safeParse(req.body)
     if (!parsedData.success){
         res.status(400).json({message: "Validation failed"})
@@ -56,7 +64,7 @@ adminRouter.post('/avatar', async(req,res) => {
     res.json({id: avatar.id})
 })
 
-adminRouter.post('/map', async(req,res) => {
+adminRouter.post('/map',adminMiddleware, async(req,res) => {
     const parsedData = CreateMapSchema.safeParse(req.body)
     if (!parsedData.success){
         res.status(400).json({message: "Validation failed"})

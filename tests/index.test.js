@@ -613,7 +613,7 @@ describe ("Arena endpoints", () => {
         expect(newResponse.data.elements.length).toBe(4)
     })
 })
-/*
+
 describe('Admin Endpoints', () => {
     let adminToken;
     let adminId;
@@ -679,7 +679,7 @@ describe('Admin Endpoints', () => {
                 authorization: `Bearer ${userToken}`
             }
          })
-
+         
          const createAvatarResponse = await axios.post(`${BACKEND_URL}/api/v1/admin/map`, {
             "thumbnail": "https://thumbnail.com/a.png",
             "dimensions": "100x200",
@@ -763,7 +763,7 @@ describe('Admin Endpoints', () => {
     })  
 
     test ('Admin is able to update the imageUrl for an element', async () => {
-        console.log(adminToken)
+        
         const elementResponse = await axios.post(`${BACKEND_URL}/api/v1/admin/element`, {
             "imageUrl": "https://image.com/cat3.png",
             "width": 1,
@@ -774,7 +774,6 @@ describe('Admin Endpoints', () => {
                 "authorization": `Bearer ${adminToken}`
             }
         })
-        console.log(elementResponse);
         const updateElementResponse = await axios.put(`${BACKEND_URL}/api/v1/admin/element/${elementResponse.data.id}`, {
             "imageUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRCRca3wAR4zjPPTzeIY9rSwbbqB6bB2hVkoTXN4eerXOIkJTG1GpZ9ZqSGYafQPToWy_JTcmV5RHXsAsWQC3tKnMlH_CsibsSZ5oJtbakq&usqp=CAE"
         }, {
