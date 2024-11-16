@@ -170,7 +170,6 @@ describe("User metadata endpoints", () => {
     })
 })
 
-
 describe ("User avatar information", () => {
     let avatarId;
     let token;
@@ -408,7 +407,7 @@ describe ("Space information", () => {
     })
 
     test ('Admin has gets once space after', async () => {
-        const spaceCreatedResponse = await axios.post(`${BACKEND_URL}/api/v1/space/all`,{
+        const spaceCreatedResponse = await axios.post(`${BACKEND_URL}/api/v1/space`,{
             "name": "Test",
             "dimensions": "100x200"
         },{
@@ -427,7 +426,6 @@ describe ("Space information", () => {
         expect(filteredSpace).toBeDefined()
     })
 })
-
 
 describe ("Arena endpoints", () => {
     let mapId;
@@ -562,13 +560,13 @@ describe ("Arena endpoints", () => {
         });
         
         let res = await axios.delete(`${BACKEND_URL}/api/v1/space/element`, {
-            data: {id: response.data.elements[0].id}
-        },{
+            data: {id: response.data.elements[0].id},
             headers: {
-                authorization: `Bearer ${userToken}`
+                "authorization": `Bearer ${userToken}`
             }
         });
-        
+        console.log(res.data);
+        console.log(res.status)
         const newResponse = await axios.get(`${BACKEND_URL}/api/v1/space/${spaceId}`, {
             headers: {
                 authorization: `Bearer ${userToken}`
@@ -610,7 +608,7 @@ describe ("Arena endpoints", () => {
             }
         });
 
-        expect(newResponse.data.elements.length).toBe(4)
+        expect(newResponse.data.elements.length).toBe(3)
     })
 })
 

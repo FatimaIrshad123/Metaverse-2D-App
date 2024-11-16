@@ -60,6 +60,35 @@ spaceRouter.post('/', userMiddleware, async(req,res) => {
     res.json({spaceId: space.id})
 })
 
+spaceRouter.delete('/element',userMiddleware, async(req,res) => {
+    console.log("hi there")
+    const parsedData = DeleteElementSchema.safeParse(req.body)
+    console.log(parsedData)
+    if (!parsedData.success){
+        res.status(400).json({message: "Validation failed"})
+        return
+    }
+    const spaceElement = await client.spaceElements.findFirst({
+        where: {
+            id: parsedData.data.id,
+        }, include: {
+            space: true,
+        }
+    })
+    console.log(spaceElement)
+    //console.log(spaceElement.space.creatorId)
+    if (!spaceElement?.space.creatorId || spaceElement.space.creatorId !== req.userId) {
+        res.status(403).json({message: "Unauthorized"})
+        return
+    }
+    await client.spaceElements.delete({
+        where: {
+            id: parsedData.data.id
+        }
+    })
+    res.json({message: "Element deleted"})
+})
+
 spaceRouter.delete('/:spaceId',userMiddleware, async (req,res) => {
     const space = await client.space.findUnique({
         where: {
@@ -133,35 +162,6 @@ spaceRouter.post('/element',userMiddleware, async(req,res) => {
         }
     })
     res.json({message: "Space Created"})
-})
-
-spaceRouter.delete('/element',userMiddleware, async(req,res) => {
-    console.log("hi there")
-    const parsedData = DeleteElementSchema.safeParse(req.body)
-    console.log(parsedData)
-    if (!parsedData.success){
-        res.status(400).json({message: "Validation failed"})
-        return
-    }
-    const spaceElement = await client.spaceElements.findFirst({
-        where: {
-            id: parsedData.data.id,
-        }, include: {
-            space: true,
-        }
-    })
-    console.log(spaceElement)
-    //console.log(spaceElement.space.creatorId)
-    if (!spaceElement?.space.creatorId || spaceElement.space.creatorId !== req.userId) {
-        res.status(403).json({message: "Unauthorized"})
-        return
-    }
-    await client.spaceElements.delete({
-        where: {
-            id: parsedData.data.id
-        }
-    })
-    res.json({message: "Element deleted"})
 })
 
 spaceRouter.get('/:spaceId',userMiddleware, async(req,res) => {
