@@ -116,6 +116,10 @@ spaceRouter.post('/element',userMiddleware, async(req,res) => {
             height: true
         }
     })
+    if(req.body.x < 0 || req.body.y < 0 || req.body.x > space?.width! || req.body.y > space?.height!) {
+        res.status(400).json({message: "Point is outside of the boundary"})
+        return
+    }
     if (!space) {
         res.status(400).json({message: "Space not found"})
         return
@@ -132,18 +136,22 @@ spaceRouter.post('/element',userMiddleware, async(req,res) => {
 })
 
 spaceRouter.delete('/element',userMiddleware, async(req,res) => {
+    console.log("hi there")
     const parsedData = DeleteElementSchema.safeParse(req.body)
+    console.log(parsedData)
     if (!parsedData.success){
         res.status(400).json({message: "Validation failed"})
         return
     }
     const spaceElement = await client.spaceElements.findFirst({
         where: {
-            id: req.body.spaceId,
+            id: parsedData.data.id,
         }, include: {
             space: true,
         }
     })
+    console.log(spaceElement)
+    //console.log(spaceElement.space.creatorId)
     if (!spaceElement?.space.creatorId || spaceElement.space.creatorId !== req.userId) {
         res.status(403).json({message: "Unauthorized"})
         return
