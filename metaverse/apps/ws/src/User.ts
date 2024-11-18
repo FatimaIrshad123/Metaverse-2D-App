@@ -24,11 +24,13 @@ export class User {
         this.id = getRandomString(10)
         this.x = 0;
         this.y = 0;
+        this.initHandlers()
     }
 
     initHandlers(){
         this.ws.on("message", async (data) => {
             const parsedData = JSON.parse(data.toString());
+            //console.log(parsedData)
             switch (parsedData.type) {
                 case "join": {
                     const spaceId = parsedData.payload.spaceId;

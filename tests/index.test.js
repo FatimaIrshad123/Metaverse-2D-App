@@ -1,4 +1,5 @@
 const axios2 = require("axios");
+const WebSocket = require("ws")
 
 const BACKEND_URL = "http://localhost:3000"
 const WS_URL = "ws://localhost:3001"
@@ -37,7 +38,7 @@ const axios = {
         }
     }
 }
-
+/*
 describe("Authentication",() => {
     test('User is able to sign up only once', async () => {
         const username = "fatima" + Math.random(); //`fatima-${Math.random()}`;
@@ -783,8 +784,8 @@ describe('Admin Endpoints', () => {
         expect (updateElementResponse.status).toBe(200)
     })
 })
-
-/*describe("Websocket test", () => {
+*/
+describe("Websocket test", () => {
     let adminToken;
     let adminUserId;
     let userToken;
@@ -818,28 +819,31 @@ describe('Admin Endpoints', () => {
     }
     async function setupHTTP() {
         const username = `fatima-${Math.random()}`
-        const password = '12345'
+        const password = '1234567'
         const adminSignupResponse = await axios.post(`${BACKEND_URL}/api/v1/signup`, {
             username,
             password,
-            role: "admin"
+            type: "admin"
         })
         const adminSigninResponse = await axios.post(`${BACKEND_URL}/api/v1/signin`, {
             username,
             password
         })
+        console.log(adminSignupResponse.data);
         adminUserId = adminSignupResponse.data.userId;
         adminToken = adminSigninResponse.data.token;
 
         const userSignupResponse = await axios.post(`${BACKEND_URL}/api/v1/signup`, {
             username: username + `-user`,
             password,
+            type: "user"
         })
 
         const userSigninResponse = await axios.post(`${BACKEND_URL}/api/v1/signin`, {
             username: username + `-user`,
             password,
         })
+        //console.log(userSignupResponse.data)
         userId = userSignupResponse.data.userId
         userToken = userSigninResponse.data.token
 
@@ -893,7 +897,7 @@ describe('Admin Endpoints', () => {
          })
          mapId = mapResponse.id
 
-         const spaceResponse = await axios.post (`${BACKEND_URL}/api/v1`, {
+         const spaceResponse = await axios.post (`${BACKEND_URL}/api/v1/space`, {
             "name": "Test",
             "dimensions": "100*200",
             "mapId": mapId
@@ -941,8 +945,8 @@ describe('Admin Endpoints', () => {
     }
 
     beforeAll(async() => {
-        setupHTTP()
-        setupWs()
+        await setupHTTP()
+        await setupWs()
     })
 
     test("Get back ack for joining the space", async() => {
@@ -985,7 +989,7 @@ describe('Admin Endpoints', () => {
 
     test("User should not be able to move across the boundary of the wall", async() => {
         ws1.send(JSON.stringify({
-            type: "movement",
+            type: "move",
             payload: {
                 x: 1000000,
                 y: 10000
@@ -1000,7 +1004,7 @@ describe('Admin Endpoints', () => {
 
     test("User should not be able to move two blocks at the same time", async() => {
         ws1.send(JSON.stringify({
-            type: "movement",
+            type: "move",
             payload: {
                 x: adminX + 2,
                 y: adminY
@@ -1035,4 +1039,4 @@ describe('Admin Endpoints', () => {
         expect(message.type).toBe("user-left")
         expect(message.payload.userId).toBe(adminUserId)
     })
-})*/
+})
