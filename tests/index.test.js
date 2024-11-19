@@ -789,6 +789,7 @@ describe("Websocket test", () => {
     let adminToken;
     let adminUserId;
     let userToken;
+    let adminId;
     let userId;
     let mapId;
     let element1Id;
@@ -804,7 +805,7 @@ describe("Websocket test", () => {
     let adminY;
 
     function waitForAndPopLatestMessage(messageArray){
-        return new Promise(r => {
+        return new Promise(resolve => {
             if (messageArray.length > 0){
                 resolve(messageArray.shift())
             }else {
@@ -817,6 +818,7 @@ describe("Websocket test", () => {
             }
         })
     }
+
     async function setupHTTP() {
         const username = `fatima-${Math.random()}`
         const password = '1234567'
@@ -829,9 +831,10 @@ describe("Websocket test", () => {
             username,
             password
         })
-        console.log(adminSignupResponse.data);
+        
         adminUserId = adminSignupResponse.data.userId;
         adminToken = adminSigninResponse.data.token;
+        console.log(adminToken);
 
         const userSignupResponse = await axios.post(`${BACKEND_URL}/api/v1/signup`, {
             username: username + `-user`,
@@ -895,8 +898,8 @@ describe("Websocket test", () => {
                 authorization: `Bearer ${adminToken}`
             }
          })
-         mapId = mapResponse.id
-
+         mapId = mapResponse.data.id
+         
          const spaceResponse = await axios.post (`${BACKEND_URL}/api/v1/space`, {
             "name": "Test",
             "dimensions": "100*200",
@@ -910,24 +913,24 @@ describe("Websocket test", () => {
     }
     async function setupWs() {
         ws1 = new WebSocket(WS_URL)
-        
+        ws1.onmessage = (event) => {
+            console.log(event.data)
+            ws1Messages.push(JSON.parse(event.data))
+        }
         await new Promise(r => {
             ws1.onopen = r
         })
-        ws1.onmessage = (event) => {
-            ws1Messages.push(JSON.parse(event.data))
-        }
-
+        
         ws2 = new WebSocket(WS_URL)
-
+        ws2.onmessage = (event) => {
+            console.log(event.data)
+            ws2Messages.push(JSON.parse(event.data))
+        }
         await new Promise(r => {
             ws2.onopen = r
         })
-        
-        ws2.onmessage = (event) => {
-            ws2Messages.push(JSON.parse(event.data))
-        }
 
+        /*
         ws1.send(JSON.stringify({
             "type": "join",
             "payload": {
@@ -941,7 +944,7 @@ describe("Websocket test", () => {
                 "spaceId": spaceId,
                 "token": userToken
             }
-        }))
+        }))*/
     }
 
     beforeAll(async() => {
@@ -957,8 +960,9 @@ describe("Websocket test", () => {
                 "token": adminToken
             }
         }))
+        
         const message1 = await waitForAndPopLatestMessage(ws1Messages)
-
+        //console.log(message1)
         ws2.send(JSON.stringify({
             "type": "join",
             "payload": {
@@ -968,6 +972,7 @@ describe("Websocket test", () => {
         }))
         
         const message2 = await waitForAndPopLatestMessage(ws2Messages)
+        console.log(message2);
         const message3 = await waitForAndPopLatestMessage(ws1Messages)
 
         expect(message1.type).toBe("space-joined")
@@ -1019,9 +1024,9 @@ describe("Websocket test", () => {
 
     test("Correct movement should be broadcasted to the other socket at the same time", async() => {
         ws1.send(JSON.stringify({
-            type: "movement",
+            type: "move",
             payload: {
-                x: adminX +12,
+                x: adminX +1,
                 y: adminY,
                 userId: adminId
             }

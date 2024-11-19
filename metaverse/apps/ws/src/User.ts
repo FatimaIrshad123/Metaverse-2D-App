@@ -9,7 +9,7 @@ function getRandomString(length: number) {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
     let result = "";
     for (let i = 0; i< length; i++){
-        result += characters.charAt(Math.floor(Math.random() + characters.length))
+        result += characters.charAt(Math.floor(Math.random() * characters.length))
     }
     return result;
 }
@@ -29,6 +29,7 @@ export class User {
 
     initHandlers(){
         this.ws.on("message", async (data) => {
+            console.log(data)
             const parsedData = JSON.parse(data.toString());
             //console.log(parsedData)
             switch (parsedData.type) {
@@ -55,13 +56,13 @@ export class User {
                     this.x = Math.floor(Math.random() * space?.width),
                     this.y = Math.floor(Math.random() * space?.height)
                     this.send({
-                        type: "spce-joined",
+                        type: "space-joined",
                         payload: {
                             spawn: {
                                 x: this.x,
                                 y: this.y
                             },
-                            user: RoomManager.getInstance().rooms.get(spaceId)?.map((u) => ({id: u.id})) ?? []
+                            user: RoomManager.getInstance().rooms.get(spaceId)?.filter(x => x.id !== this.id)?.map((u) => ({id: u.id})) ?? []
                         }
                     });
                 }
@@ -74,11 +75,11 @@ export class User {
                     }
                 }, this, this.spaceId!);
                 break;
-             case "move": 
+             case "movement": 
                 const moveX = parsedData.payload.x;
                 const moveY = parsedData.payload.y;
                 const xDisplacement = Math.abs(this.x - moveX);
-                const yDisplacement = Math.abs(this.x - moveX);
+                const yDisplacement = Math.abs(this.y - moveY);
                 if ((xDisplacement == 1 && yDisplacement == 0) || (xDisplacement == 0 && yDisplacement == 1)) {
                     this.x = moveX;
                     this.y = moveY;
@@ -88,7 +89,8 @@ export class User {
                             x: this.x,
                             y: this.y
                         }
-                    }, this, this.spaceId!)
+                    }, this, this.spaceId!);
+                    return;
                 }
                 this.send({
                     type: "movement-rejected",
