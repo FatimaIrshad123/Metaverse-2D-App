@@ -71,7 +71,7 @@ const AuthPage: React.FC = () => {
               placeholder="Enter your password"
             />
           </div>
-          <button
+          <button onClick={handleSubmit}
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
           >
