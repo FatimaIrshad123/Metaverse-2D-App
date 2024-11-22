@@ -201,7 +201,8 @@ const Arena = () => {
         break;
     }
   };
-
+console.log("user.size", users.size)
+console.log('currentuser', currentUser)
   return (
     <div className="p-4" onKeyDown={handleKeyDown} tabIndex={0}>
         <h1 className="text-2xl font-bold mb-4">Arena</h1>
@@ -213,8 +214,8 @@ const Arena = () => {
         <div className="border rounded-lg overflow-hidden">
           <canvas
             ref={canvasRef}
-            width={2000}
-            height={2000}
+            width={1500}
+            height={1500}
             className="bg-white"
           />
         </div>

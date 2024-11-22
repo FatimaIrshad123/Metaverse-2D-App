@@ -1,12 +1,12 @@
-
-import Arena from './Game'
+import "react-toastify/dist/ReactToastify.css";
+import AuthPage from "./Auth";
 
 function App() {
   
   return (
-    <div>
-      <Arena />
-    </div>
+    <>
+      <AuthPage />
+    </>
   )
 }
 
