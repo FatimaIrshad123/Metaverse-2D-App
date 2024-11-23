@@ -9,7 +9,7 @@ const HomePage = () => {
           backgroundRepeat: 'no-repeat',
         }}>
           <Navbar />
-       
+          
       </div>
     )
   }
