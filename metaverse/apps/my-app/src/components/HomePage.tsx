@@ -1,4 +1,5 @@
 import Navbar from "./Navbar"
+import VirtualPage from "./VirtualPage"
 
 const HomePage = () => {
     return (
@@ -9,7 +10,7 @@ const HomePage = () => {
           backgroundRepeat: 'no-repeat',
         }}>
           <Navbar />
-          
+          <VirtualPage />
       </div>
     )
   }
