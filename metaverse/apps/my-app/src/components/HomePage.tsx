@@ -1,3 +1,4 @@
+import IntroPage from "./IntroPage"
 import Navbar from "./Navbar"
 import VirtualPage from "./VirtualPage"
 
@@ -11,6 +12,7 @@ const HomePage = () => {
         }}>
           <Navbar />
           <VirtualPage />
+          <IntroPage />
       </div>
     )
   }
