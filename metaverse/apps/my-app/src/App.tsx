@@ -2,6 +2,7 @@ import HomePage from "./components/HomePage";
 import SignInPage from "./components/SignInPage";
 import SignupPage from "./components/SignupPage";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import UserDashboard from "./components/UserDashboard";
 
 function App() {
   
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/UserDashboard" element={<UserDashboard />} />
       </Routes>
     </Router>
     </div>

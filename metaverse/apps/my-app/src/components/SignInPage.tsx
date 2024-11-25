@@ -39,7 +39,7 @@ const SignInPage = () => {
             username: '',
             password: '',
           });
-          navigate('/')
+          navigate('/UserDashboard')
     } catch (err:any) {
       setError(err.message || 'An error occurred during signin');
     } finally {
