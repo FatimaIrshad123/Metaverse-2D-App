@@ -1,12 +1,8 @@
-
 import { useState } from 'react';
 import { 
-  Menu,
-  X,
   CircleHelp,
   Globe,
   CircleUserRound,
-  icons,
   CalendarDays,
   Sparkles,
   CirclePlus,
@@ -31,8 +27,8 @@ const UserNavbar = () => {
   ];
 
   return (
-    <nav className="bg-gradient-to-r p-2 pt-5">
-      <div className="max-w-6xl mx-auto">
+    <nav className="py-5">
+      <div className="px-14">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <div className="flex items-center space-x-2">
