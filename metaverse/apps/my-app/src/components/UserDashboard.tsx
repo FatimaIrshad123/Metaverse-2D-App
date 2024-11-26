@@ -10,8 +10,8 @@ const UserDashboard = () => {
         backgroundRepeat: 'no-repeat',
       }}>
       <UserNavbar />
-      <div className="px-14 lg:flex justify-end">
-        <h2 className="text-white font-bold text-2xl px-5 pb-3 lg:hidden">Your Spaces</h2>
+      <div className="px-14 lg:flex md:flex justify-end">
+        <h2 className="text-white font-bold text-2xl px-5 pb-3 lg:hidden md:hidden">Your Spaces</h2>
         <button className="text-white font-semibold bg-slate-500 rounded-2xl px-7 py-3 hidden md:block lg:block">
             My Events
         </button>
