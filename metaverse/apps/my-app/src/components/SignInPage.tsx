@@ -34,6 +34,9 @@ const SignInPage = () => {
             password: formData.password,
           });
           console.log(response);
+          localStorage.setItem('adminToken',response.data.token)
+          localStorage.setItem('adminId',response.data.id)
+    
           setSuccess('Signed in successfully!');
           setFormData({
             username: '',
