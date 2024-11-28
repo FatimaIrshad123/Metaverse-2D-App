@@ -8,6 +8,9 @@ const JoinSpace = () => {
   const [elementIds, setElementIds] = useState<any>([]);
   const [mapId, setMapId] = useState<any>();
   const [spaceId, setSpaceId] = useState<any>();
+  const [width, setWidth] = useState<Number | any>();
+  const [height, setHeight] = useState<Number | any>('');
+  const [name, setName] = useState('');
 
   const BACKEND_URL = 'http://localhost:3000';
     let adminToken = localStorage.getItem('adminToken')
@@ -16,16 +19,16 @@ const JoinSpace = () => {
     try {
       const element1Response = await axios.post(`${BACKEND_URL}/api/v1/admin/element`, {
         imageUrl,
-        width: 1,
-        height: 1,
+        width,
+        height,
         static: true
       }, {
         headers: { authorization: `Bearer ${adminToken}` }
       });
       const element2Response = await axios.post(`${BACKEND_URL}/api/v1/admin/element`, {
         imageUrl,
-        width: 1,
-        height: 1,
+        width,
+        height,
         static: true
       }, {
         headers: { authorization: `Bearer ${adminToken}` }
@@ -47,8 +50,9 @@ const JoinSpace = () => {
     try {
       const mapResponse = await axios.post(`${BACKEND_URL}/api/v1/admin/map`, {
         thumbnail: thumbnailUrl,
-        dimensions: "100x200",
-        name: "100 person interview room",
+        width,
+        height,
+        name,
         defaultElements: [
           { elementId: elementIds[0], x: 20, y: 20 },
           { elementId: elementIds[0], x: 18, y: 20 },
@@ -71,7 +75,8 @@ const JoinSpace = () => {
     try {
       const spaceResponse = await axios.post(`${BACKEND_URL}/api/v1/space`, {
         name: "Test",
-        dimensions: "100x200",
+        width,
+        height,
         mapId
       }, {
         headers: { authorization: `Bearer ${adminToken}` }
@@ -98,7 +103,7 @@ const JoinSpace = () => {
       alert('Failed to create resources');
     }
   };
-  console.log(elementIds)
+  
   return (
     <div className="w-full max-w-md mx-auto mt-8">
       <div>
@@ -120,10 +125,28 @@ const JoinSpace = () => {
           <div>
             <label>Thumbnail URL</label>
             <input 
-              type="text" 
+              type="text"
               value={thumbnailUrl} 
               onChange={(e) => setThumbnailUrl(e.target.value)} 
               placeholder="Enter thumbnail URL" 
+              required 
+            />
+            <input 
+              type="text" 
+              onChange={(e) => setName(e.target.value)} 
+              placeholder="Enter name of the space" 
+              required 
+            />
+            <input 
+              type="text" 
+              onChange={(e) => setWidth(e.target.value)} 
+              placeholder="Enter Width" 
+              required 
+            />
+            <input 
+              type="text" 
+              onChange={(e) => setHeight(e.target.value)} 
+              placeholder="Enter Height" 
               required 
             />
           </div>
