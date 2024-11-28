@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import UserDashboard from "./components/UserDashboard";
 import MySpaces from "./components/MySpaces";
 import Space from "./components/Space";
-import JoinSpace from "./components/JoinSpace";
+import CreateSpace from "./components/CreateSpace";
 
 function App() {
   
@@ -19,7 +19,7 @@ function App() {
         <Route path="/UserDashboard" element={<UserDashboard />} />
         <Route path="/spaces" element={<MySpaces />} />
         <Route path="/space" element={<Space />} />
-        <Route path="/joinspace" element={<JoinSpace />}/>
+        <Route path="/createspace" element={<CreateSpace />}/>
       </Routes>
     </Router>
     </div>

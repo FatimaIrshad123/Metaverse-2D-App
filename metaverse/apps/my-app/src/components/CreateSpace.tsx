@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-const JoinSpace = () => {
+const CreateSpace = () => {
   
   const [imageUrl, setImageUrl] = useState('https://image.com/cat3.png');
   const [thumbnailUrl, setThumbnailUrl] = useState('https://thumbnail.com/a.png');
@@ -50,8 +50,7 @@ const JoinSpace = () => {
     try {
       const mapResponse = await axios.post(`${BACKEND_URL}/api/v1/admin/map`, {
         thumbnail: thumbnailUrl,
-        width,
-        height,
+        dimensions:`${width}x${height}`,
         name,
         defaultElements: [
           { elementId: elementIds[0], x: 20, y: 20 },
@@ -75,8 +74,7 @@ const JoinSpace = () => {
     try {
       const spaceResponse = await axios.post(`${BACKEND_URL}/api/v1/space`, {
         name: "Test",
-        width,
-        height,
+        dimensions: `${width}x${height}`,
         mapId
       }, {
         headers: { authorization: `Bearer ${adminToken}` }
@@ -107,12 +105,32 @@ const JoinSpace = () => {
   return (
     <div className="w-full max-w-md mx-auto mt-8">
       <div>
-        <h2>Create Elements, Map, and Space</h2>
+        <h2>Create Space</h2>
       </div>
       <div>
         <form onSubmit={handleSubmit} className="space-y-4">
-          
           <div>
+            <label>Space Name</label>
+            <input 
+              type="text" 
+              onChange={(e) => setName(e.target.value)} 
+              placeholder="Enter name of the space" 
+              required 
+            />
+            <label>Width</label>
+            <input 
+              type="text" 
+              onChange={(e) => setWidth(Number(e.target.value))} 
+              placeholder="Enter Width" 
+              required 
+            />
+            <label>Height</label>
+            <input 
+              type="text" 
+              onChange={(e) => setHeight(Number(e.target.value))} 
+              placeholder="Enter Height" 
+              required 
+            />
             <label>Image URL</label>
             <input 
               type="text" 
@@ -121,8 +139,6 @@ const JoinSpace = () => {
               placeholder="Enter image URL" 
               required 
             />
-          </div>
-          <div>
             <label>Thumbnail URL</label>
             <input 
               type="text"
@@ -130,42 +146,15 @@ const JoinSpace = () => {
               onChange={(e) => setThumbnailUrl(e.target.value)} 
               placeholder="Enter thumbnail URL" 
               required 
-            />
-            <input 
-              type="text" 
-              onChange={(e) => setName(e.target.value)} 
-              placeholder="Enter name of the space" 
-              required 
-            />
-            <input 
-              type="text" 
-              onChange={(e) => setWidth(e.target.value)} 
-              placeholder="Enter Width" 
-              required 
-            />
-            <input 
-              type="text" 
-              onChange={(e) => setHeight(e.target.value)} 
-              placeholder="Enter Height" 
-              required 
-            />
+            />          
           </div>
           <button type="submit" className="w-full">
-            Create Resources
+            Create Space
           </button>
         </form>
-
-        {elementIds.length > 0 && (
-          <div className="mt-4">
-            <h3>Created Resources:</h3>
-            <p>Element IDs: {elementIds.join(', ')}</p>
-            <p>Map ID: {mapId}</p>
-            <p>Space ID: {spaceId}</p>
-          </div>
-        )}
       </div>
     </div>
   );
 };
 
-export default JoinSpace;
+export default CreateSpace;
