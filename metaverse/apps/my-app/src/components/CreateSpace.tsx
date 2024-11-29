@@ -1,16 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { templatedata } from '../data/templatedata';
 
 const CreateSpace = () => {
   
-  const [imageUrl, setImageUrl] = useState('https://image.com/cat3.png');
-  const [thumbnailUrl, setThumbnailUrl] = useState('https://thumbnail.com/a.png');
+  const [imageUrl, setImageUrl] = useState<string[]>([]);
+  const [thumbnailUrl, setThumbnailUrl] = useState<string[]>([]);
   const [elementIds, setElementIds] = useState<any>([]);
   const [mapId, setMapId] = useState<any>();
   const [spaceId, setSpaceId] = useState<any>();
   const [width, setWidth] = useState<Number | any>();
   const [height, setHeight] = useState<Number | any>('');
-  const [name, setName] = useState('');
+  const [name, setName] = useState<string[]>([]);
+  const [templates, setTemplates] = useState<any>([])
 
   const BACKEND_URL = 'http://localhost:3000';
     let adminToken = localStorage.getItem('adminToken')
@@ -89,8 +91,9 @@ const CreateSpace = () => {
     }
   };
 
-  const handleSubmit = async (e:any) => {
+  const handleSubmit = async (e: React.MouseEvent,template:any) => {
     e.preventDefault();
+    console.log(template)
     try {
       const elementIds = await createElements();
       const mapId = await createMap(elementIds);
@@ -102,59 +105,53 @@ const CreateSpace = () => {
     }
   };
   
+  useEffect(() => {
+    if (templatedata.length > 0) {
+      const processedNames = templatedata.map((item) => item.name);
+      const processedWidths = templatedata.map((item) => item.width);
+      const processedHeights = templatedata.map((item) => item.height);
+      const processedImageUrls = templatedata.map((item) => item.imageUrl);
+      const processedThumbnailUrls = templatedata.map((item) => item.thumbnail);
+
+      setName(processedNames);
+      setWidth(processedWidths);
+      setHeight(processedHeights);
+      setImageUrl(processedImageUrls);
+      setThumbnailUrl(processedThumbnailUrls);
+
+      const processedData = templatedata.map((item) => ({
+        name: item.name,
+        width: item.width,
+        height: item.height,
+        imageUrl: item.imageUrl,
+        thumbnailUrl: item.thumbnail,
+      }));
+      setTemplates(processedData);
+    }
+  }, [templatedata]);
+
   return (
-    <div className="w-full max-w-md mx-auto mt-8">
+    <div className="bg-white min-h-screen m-10">
       <div>
-        <h2>Create Space</h2>
+        <h2 className="font-bold text-2xl">Select a Template</h2>
       </div>
       <div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label>Space Name</label>
-            <input 
-              type="text" 
-              onChange={(e) => setName(e.target.value)} 
-              placeholder="Enter name of the space" 
-              required 
+        {templates.map((template:any, index:any) => (
+          <div key={index}>
+            <h2>{name[index]}</h2>
+            <img
+              src={imageUrl[index]} 
+              alt={name[index]}
+              width={width[index]} 
+              height={height[index]} 
             />
-            <label>Width</label>
-            <input 
-              type="text" 
-              onChange={(e) => setWidth(Number(e.target.value))} 
-              placeholder="Enter Width" 
-              required 
-            />
-            <label>Height</label>
-            <input 
-              type="text" 
-              onChange={(e) => setHeight(Number(e.target.value))} 
-              placeholder="Enter Height" 
-              required 
-            />
-            <label>Image URL</label>
-            <input 
-              type="text" 
-              value={imageUrl} 
-              onChange={(e) => setImageUrl(e.target.value)} 
-              placeholder="Enter image URL" 
-              required 
-            />
-            <label>Thumbnail URL</label>
-            <input 
-              type="text"
-              value={thumbnailUrl} 
-              onChange={(e) => setThumbnailUrl(e.target.value)} 
-              placeholder="Enter thumbnail URL" 
-              required 
-            />          
+            <button onClick={(e) => handleSubmit(e,template)}>{name[index]}</button>
+            <img src={thumbnailUrl[index]} hidden/>
           </div>
-          <button type="submit" className="w-full">
-            Create Space
-          </button>
-        </form>
+        ))}
       </div>
     </div>
-  );
+  )
 };
 
 export default CreateSpace;
