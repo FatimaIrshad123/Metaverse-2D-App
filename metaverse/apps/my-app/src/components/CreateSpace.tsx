@@ -143,23 +143,23 @@ const CreateSpace = () => {
       <div>
         <h2 className="font-bold text-2xl">Select a Template</h2>
       </div>
-      <div>
+      <div className='grid lg:grid-cols-5 md:grid-cols-3 gap-4 sm:justify-center mt-7'>
         {templates.map((template:any, index:any) => (
-          <div key={index}>
-            <h2>{name[index]}</h2>
+          <div key={index} className=''>
             <img
+              className='rounded-lg'
               src={imageUrl[index]} 
               alt={name[index]}
               width={width1[index]} 
               height={height[index]} 
+              onClick={(e) => {
+                setSelectedWidth(template.width)
+                console.log('template.width',selectedWidth);
+                console.log('template',template);
+                handleSubmit(e,template);
+              }}
             />
-            <button onClick={(e) => {
-              setSelectedWidth(template.width)
-              console.log('template.width',selectedWidth);
-              console.log('template',template);
-              handleSubmit(e,template);
-            }
-            }>{name[index]}</button>
+            <h2>{name[index]}</h2>
             <img src={thumbnailUrl[index]} hidden/>
           </div>
         ))}
