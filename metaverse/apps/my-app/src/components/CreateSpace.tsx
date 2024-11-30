@@ -9,10 +9,14 @@ const CreateSpace = () => {
   const [elementIds, setElementIds] = useState<any>([]);
   const [mapId, setMapId] = useState<any>();
   const [spaceId, setSpaceId] = useState<any>();
-  const [width, setWidth] = useState<Number | any>();
-  const [height, setHeight] = useState<Number | any>('');
+  const [width1, setWidth] = useState<Number| any> ();
+  const [height, setHeight] = useState<Number| any> ();
   const [name, setName] = useState<string[]>([]);
   const [templates, setTemplates] = useState<any>([])
+  const [selectedWidth, setSelectedWidth] = useState<Number >(200)
+  const [selectedHeight, setSelectedHeight] = useState<Number >(200)
+  const [selectedImageUrl, setSelectedImageUrl] = useState<any>('https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+  const [selectedName, setSelectedName] = useState('')
 
   const BACKEND_URL = 'http://localhost:3000';
     let adminToken = localStorage.getItem('adminToken')
@@ -20,22 +24,22 @@ const CreateSpace = () => {
   const createElements = async () => {
     try {
       const element1Response = await axios.post(`${BACKEND_URL}/api/v1/admin/element`, {
-        imageUrl,
-        width,
-        height,
+        imageUrl: selectedImageUrl,
+        width:selectedWidth,
+        height: selectedHeight,
         static: true
       }, {
         headers: { authorization: `Bearer ${adminToken}` }
       });
       const element2Response = await axios.post(`${BACKEND_URL}/api/v1/admin/element`, {
-        imageUrl,
-        width,
-        height,
+        imageUrl: selectedImageUrl,
+        width: selectedWidth,
+        height: selectedHeight,
         static: true
       }, {
         headers: { authorization: `Bearer ${adminToken}` }
       });
-
+      console.log('element1Response.data', element1Response.data)
       const newElementIds = [
         element1Response.data.id,
         element2Response.data.id, 
@@ -51,9 +55,9 @@ const CreateSpace = () => {
   const createMap = async (elementIds:any) => {
     try {
       const mapResponse = await axios.post(`${BACKEND_URL}/api/v1/admin/map`, {
-        thumbnail: thumbnailUrl,
-        dimensions:`${width}x${height}`,
-        name,
+        thumbnail: selectedImageUrl,
+        dimensions:`${selectedWidth}x${selectedHeight}`,
+        name: selectedName,
         defaultElements: [
           { elementId: elementIds[0], x: 20, y: 20 },
           { elementId: elementIds[0], x: 18, y: 20 },
@@ -76,7 +80,7 @@ const CreateSpace = () => {
     try {
       const spaceResponse = await axios.post(`${BACKEND_URL}/api/v1/space`, {
         name: "Test",
-        dimensions: `${width}x${height}`,
+        dimensions: `${selectedWidth}x${selectedHeight}`,
         mapId
       }, {
         headers: { authorization: `Bearer ${adminToken}` }
@@ -93,7 +97,11 @@ const CreateSpace = () => {
 
   const handleSubmit = async (e: React.MouseEvent,template:any) => {
     e.preventDefault();
-    console.log(template)
+    setSelectedName(template.name)
+    setSelectedWidth(template.width1);
+    setSelectedHeight(template.height);
+    setSelectedImageUrl(template.imageUrl);
+
     try {
       const elementIds = await createElements();
       const mapId = await createMap(elementIds);
@@ -121,7 +129,7 @@ const CreateSpace = () => {
 
       const processedData = templatedata.map((item) => ({
         name: item.name,
-        width: item.width,
+        width1: item.width,
         height: item.height,
         imageUrl: item.imageUrl,
         thumbnailUrl: item.thumbnail,
@@ -142,10 +150,16 @@ const CreateSpace = () => {
             <img
               src={imageUrl[index]} 
               alt={name[index]}
-              width={width[index]} 
+              width={width1[index]} 
               height={height[index]} 
             />
-            <button onClick={(e) => handleSubmit(e,template)}>{name[index]}</button>
+            <button onClick={(e) => {
+              setSelectedWidth(template.width)
+              console.log('template.width',selectedWidth);
+              console.log('template',template);
+              handleSubmit(e,template);
+            }
+            }>{name[index]}</button>
             <img src={thumbnailUrl[index]} hidden/>
           </div>
         ))}
