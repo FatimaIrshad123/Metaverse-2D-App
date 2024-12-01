@@ -7,6 +7,7 @@ import MySpaces from "./components/MySpaces";
 import Space from "./components/Space";
 import CreateSpace from "./components/CreateSpace";
 import Arena from "./components/Game";
+import AvatarPage from "./components/Avatar";
 
 function App() {
   
@@ -22,6 +23,7 @@ function App() {
         <Route path="/space" element={<Space />} />
         <Route path="/createspace" element={<CreateSpace />}/>
         <Route path="/game" element={<Arena />} />
+        <Route path="/avatar" element={<AvatarPage />} />
       </Routes>
     </Router>
     </div>
