@@ -34,12 +34,15 @@ const SignInPage = () => {
             password: formData.password,
           });
           console.log(response);
+          localStorage.setItem('adminToken',response.data.token)
+          localStorage.setItem('adminId',response.data.id)
+    
           setSuccess('Signed in successfully!');
           setFormData({
             username: '',
             password: '',
           });
-          navigate('/')
+          navigate('/UserDashboard')
     } catch (err:any) {
       setError(err.message || 'An error occurred during signin');
     } finally {
