@@ -8,6 +8,7 @@ import Space from "./components/Space";
 import CreateSpace from "./components/CreateSpace";
 import Arena from "./components/Game";
 import AvatarPage from "./components/Avatar";
+import CreateAvatar from "./components/CreateAvatar";
 
 function App() {
   
@@ -24,6 +25,7 @@ function App() {
         <Route path="/createspace" element={<CreateSpace />}/>
         <Route path="/game" element={<Arena />} />
         <Route path="/avatar" element={<AvatarPage />} />
+        <Route path="/createavatar" element={<CreateAvatar />} />
       </Routes>
     </Router>
     </div>
