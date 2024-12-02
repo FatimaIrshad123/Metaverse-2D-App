@@ -1,6 +1,6 @@
 import IntroPage from "./IntroPage"
-import Navbar from "./Navbar"
-import VirtualPage from "./VirtualPage"
+import Navbar from "../components/Navbar"
+import VirtualPage from "../components/VirtualPage"
 
 const HomePage = () => {
     return (

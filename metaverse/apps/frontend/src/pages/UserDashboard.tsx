@@ -1,4 +1,4 @@
-import UserNavbar from "./UserNavbar"
+import UserNavbar from "../components/UserNavbar"
 import {Search} from 'lucide-react'
 
 const UserDashboard = () => {
