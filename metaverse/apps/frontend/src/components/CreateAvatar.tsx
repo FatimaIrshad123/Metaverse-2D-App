@@ -1,13 +1,10 @@
 import { useState } from "react"
 import axios from 'axios';
 import { BACKENDURL } from "../url";
-import { AlertCircle, CheckCircle } from 'lucide-react';
 
 const CreateAvatar = () => {
     const [avatarName, setAvatarName] = useState<string>();
     const [imageUrl, setImageUrl] = useState<string>();
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
   
     let adminToken = localStorage.getItem('adminToken')
 
@@ -26,7 +23,19 @@ const CreateAvatar = () => {
           throw error;
         }
       };
-console.log(avatarName,imageUrl)
+
+       const handleSubmit = async(e:any) => {
+        e.preventDefault();
+        try {
+          await createavatar();
+          alert('Avatar created successfully')
+        }catch(error){
+          console.log(error);
+          alert('Error creating avatar')
+        }
+          
+          
+       }
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gray-200">
         <div className="max-w-md w-full space-y-8 bg-white rounded-2xl shadow-xl p-8 transform transition-all duration-500 hover:scale-[1.02]">
@@ -66,29 +75,13 @@ console.log(avatarName,imageUrl)
               </div>
               <button
                 type="submit"
-                onClick={createavatar}
+                onClick={handleSubmit}
                 className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring-500 transform transition-all duration-200 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed">
                     Create avatar
               </button>
             </div>
           </form>
         </div>
-        {/* Error Message */}
-        {error && (
-            <div className="flex items-center space-x-2 text-red-600 bg-red-50 p-3 rounded-lg">
-              <AlertCircle className="h-5 w-5" />
-              <span className="text-sm">{error}</span>
-            </div>
-          )}
-
-          {/* Success Message */}
-          {success && (
-            <div className="flex items-center space-x-2 text-green-600 bg-green-50 p-3 rounded-lg">
-              <CheckCircle className="h-5 w-5" />
-              <span className="text-sm">{success}</span>
-            </div>
-          )}
-
       </div>
   )
 }
