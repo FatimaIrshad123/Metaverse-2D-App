@@ -24,12 +24,12 @@ const Avatar = () => {
       </div>
       <div>
         {avatars.map((avatar: any, index: number) => {
-            return (
-                <div key={index}>
-                    <img src={avatar.imageUrl}/>
-                    <h2>{avatar.name}</h2>
-                </div>
-            )
+          return (
+            <div key={index}>
+              <img src={avatar.imageUrl}/>
+              <h2>{avatar.name}</h2>
+            </div>
+          )
         })}
       </div>
     </div>

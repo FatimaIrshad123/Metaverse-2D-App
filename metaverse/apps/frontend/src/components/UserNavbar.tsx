@@ -67,7 +67,7 @@ const UserNavbar = () => {
                 English
             </button>
 
-            <button className="bg-emerald-400 px-4 py-2 rounded-lg font-semibold shadow-lg transition-all duration-200 transform hover:scale-105 flex">
+            <button className="bg-emerald-400 px-4 py-2 rounded-lg font-semibold shadow-lg transition-all duration-200 transform hover:scale-105 flex" onClick={() => navigate('/CreateSpace')}>
                 <CirclePlus className="h-5 w-5 mt-1"/>
                 Create Space
             </button>

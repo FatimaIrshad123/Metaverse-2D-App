@@ -16,7 +16,7 @@ const CreateAvatar = () => {
           }, {
             headers: { authorization: `Bearer ${adminToken}` }
           });
-          console.log(avatarResponse.data)
+          
           return avatarResponse.data;
         } catch (error) {
           console.error('Error creating avatar:', error);
@@ -24,18 +24,17 @@ const CreateAvatar = () => {
         }
       };
 
-       const handleSubmit = async(e:any) => {
-        e.preventDefault();
-        try {
-          await createavatar();
-          alert('Avatar created successfully')
-        }catch(error){
-          console.log(error);
-          alert('Error creating avatar')
-        }
-          
-          
-       }
+    const handleSubmit = async(e:any) => {
+      e.preventDefault();
+      try {
+        await createavatar();
+        alert('Avatar created successfully')
+      }catch(error){
+        console.log(error);
+        alert('Error creating avatar')
+      }          
+    };
+    
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gray-200">
         <div className="max-w-md w-full space-y-8 bg-white rounded-2xl shadow-xl p-8 transform transition-all duration-500 hover:scale-[1.02]">
@@ -45,7 +44,6 @@ const CreateAvatar = () => {
             </h2>
           </div>
   
-          {/* Form */}
           <form className="mt-8 space-y-6">
             <div className="space-y-4">
               <div className="relative">

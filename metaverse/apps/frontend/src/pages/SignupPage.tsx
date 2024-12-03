@@ -22,15 +22,12 @@ const SignupPage = () => {
       [e.target.name]: e.target.value
     });
     setError('');
-    console.log('formData', formData)
   };
 
   const handleSubmit = async (e:any) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-
-    // Basic validation
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       setIsLoading(false);
@@ -38,27 +35,27 @@ const SignupPage = () => {
     }
 
     try {
-        const response = await axios.post(`${BACKENDURL}/api/v1/signup`, {
-            username: formData.username,
-            password: formData.password,
-            type: formData.type
-          });
-          console.log(response);
-          setSuccess('Account created successfully!');
-          setFormData({
-            username: '',
-            password: '',
-            confirmPassword: '',
-            type: ''
-          });
-          if (formData.type === 'admin'){
-            localStorage.setItem('adminToken',response.data.token)
-            localStorage.setItem('adminId',response.data.id)
-          } if(formData.type === 'User') {
-            localStorage.setItem('userToken',response.data.token)
-            localStorage.setItem('userId',response.data.id)
-          }
-          navigate('/userdashboard')
+      const response = await axios.post(`${BACKENDURL}/api/v1/signup`, {
+        username: formData.username,
+        password: formData.password,
+        type: formData.type
+      });
+      setSuccess('Account created successfully!');
+      setFormData({
+        username: '',
+        password: '',
+        confirmPassword: '',
+        type: ''
+      });
+      if (formData.type === 'admin'){
+        localStorage.setItem('adminToken',response.data.token)
+        localStorage.setItem('adminId',response.data.id)
+      } 
+      if(formData.type === 'User') {
+        localStorage.setItem('userToken',response.data.token)
+        localStorage.setItem('userId',response.data.id)
+      }
+      navigate('/userdashboard')
     } catch (err:any) {
       setError(err.message || 'An error occurred during signup');
     } finally {
@@ -74,7 +71,6 @@ const SignupPage = () => {
       backgroundRepeat: 'no-repeat',
     }}>
       <div className="max-w-md w-full space-y-8 bg-white rounded-2xl shadow-xl p-8 transform transition-all duration-500 hover:scale-[1.02]">
-        {/* Header */}
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-semibold text-gray-900">
             Create your account
@@ -84,10 +80,8 @@ const SignupPage = () => {
           </p>
         </div>
 
-        {/* Form */}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
-            {/* Username Input */}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <User className="h-5 w-5 text-gray-400" />
@@ -120,7 +114,6 @@ const SignupPage = () => {
               />
             </div>
 
-            {/* Password Input */}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Lock className="h-5 w-5 text-gray-400" />
@@ -137,7 +130,6 @@ const SignupPage = () => {
               />
             </div>
 
-            {/* Confirm Password Input */}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Lock className="h-5 w-5 text-gray-400" />

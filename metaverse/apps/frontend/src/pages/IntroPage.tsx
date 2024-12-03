@@ -1,5 +1,4 @@
 
-
 const IntroPage = () => {
   return (
     <div className="bg-white lg:px-48 md:px-10">

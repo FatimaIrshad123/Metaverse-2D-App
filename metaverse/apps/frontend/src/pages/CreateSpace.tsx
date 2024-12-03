@@ -17,16 +17,16 @@ const CreateSpace = () => {
   const [selectedName, setSelectedName] = useState('')
 
   const BACKEND_URL = 'http://localhost:3000';
-  let adminToken = localStorage.getItem('adminToken')
+  let userToken = localStorage.getItem('userToken')
 
   const createSpace = async () => {
     try {
       const spaceResponse = await axios.post(`${BACKEND_URL}/api/v1/space`, {
-        name: "Test",
+        name,
         dimensions: `${selectedWidth}x${selectedHeight}`,
         mapId
       }, {
-        headers: { authorization: `Bearer ${adminToken}` }
+        headers: { authorization: `Bearer ${userToken}` }
       });
 
       setSpaceId(spaceResponse.data.spaceId);

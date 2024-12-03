@@ -24,11 +24,9 @@ const SignInPage = () => {
   };
   function getUserRole() {
     const token = localStorage.getItem('token');
-    
     if (!token) {
       return null;
     }
-  
     try {
       const decoded = jwtDecode(token);
       console.log(decoded)
@@ -45,19 +43,18 @@ const SignInPage = () => {
       return null;
     }
   }
-  getUserRole();
+  
   const handleSubmit = async (e:any) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-    
+    getUserRole();
     try {
         const response = await axios.post(`${BACKENDURL}/api/v1/signin`, {
             username: formData.username,
             password: formData.password,
           });
-          console.log(response);
-    
+          
           setSuccess('Signed in successfully!');
           setFormData({
             username: '',
@@ -81,17 +78,14 @@ const SignInPage = () => {
       backgroundRepeat: 'no-repeat',
     }}>
       <div className="max-w-md w-full space-y-8 bg-white rounded-2xl shadow-xl p-8 transform transition-all duration-500 hover:scale-[1.02]">
-        {/* Header */}
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-semibold text-gray-900">
             Welcome Back
           </h2>
         </div>
 
-        {/* Form */}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
-            {/* Username Input */}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <User className="h-5 w-5 text-gray-400" />
@@ -108,7 +102,6 @@ const SignInPage = () => {
               />
             </div>
 
-            {/* Password Input */}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Lock className="h-5 w-5 text-gray-400" />
