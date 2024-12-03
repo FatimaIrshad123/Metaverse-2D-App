@@ -5,6 +5,8 @@ import { templatedata } from '../data/templatedata';
 const CreateSpace = () => {
   
   const [imageUrl, setImageUrl] = useState<string[]>([]);
+  const [thumbnailUrl, setThumbnailUrl] = useState<string[]>([]);
+  const [elementIds, setElementIds] = useState<any>([]);
   const [mapId, setMapId] = useState<any>();
   const [spaceId, setSpaceId] = useState<any>();
   const [width1, setWidth] = useState<Number| any> ();
@@ -17,9 +19,64 @@ const CreateSpace = () => {
   const [selectedName, setSelectedName] = useState('')
 
   const BACKEND_URL = 'http://localhost:3000';
-  let adminToken = localStorage.getItem('adminToken')
+    let adminToken = localStorage.getItem('adminToken')
+    
+  const createElements = async () => {
+    try {
+      const element1Response = await axios.post(`${BACKEND_URL}/api/v1/admin/element`, {
+        imageUrl: selectedImageUrl,
+        width:selectedWidth,
+        height: selectedHeight,
+        static: true
+      }, {
+        headers: { authorization: `Bearer ${adminToken}` }
+      });
+      const element2Response = await axios.post(`${BACKEND_URL}/api/v1/admin/element`, {
+        imageUrl: selectedImageUrl,
+        width: selectedWidth,
+        height: selectedHeight,
+        static: true
+      }, {
+        headers: { authorization: `Bearer ${adminToken}` }
+      });
+      console.log('element1Response.data', element1Response.data)
+      const newElementIds = [
+        element1Response.data.id,
+        element2Response.data.id, 
+      ];
+      setElementIds(newElementIds);
+      return newElementIds;
+    } catch (error) {
+      console.error('Error creating elements:', error);
+      throw error;
+    }
+  };
 
-  const createSpace = async () => {
+  const createMap = async (elementIds:any) => {
+    try {
+      const mapResponse = await axios.post(`${BACKEND_URL}/api/v1/admin/map`, {
+        thumbnail: selectedImageUrl,
+        dimensions:`${selectedWidth}x${selectedHeight}`,
+        name: selectedName,
+        defaultElements: [
+          { elementId: elementIds[0], x: 20, y: 20 },
+          { elementId: elementIds[0], x: 18, y: 20 },
+          { elementId: elementIds[1], x: 18, y: 20 }
+        ]
+      }, {
+        headers: { authorization: `Bearer ${adminToken}` }
+      });
+
+      setMapId(mapResponse.data.id);
+      localStorage.setItem('mapId',mapResponse.data.id)
+      return mapResponse.data.id;
+    } catch (error) {
+      console.error('Error creating map:', error);
+      throw error;
+    }
+  };
+
+  const createSpace = async (mapId:any) => {
     try {
       const spaceResponse = await axios.post(`${BACKEND_URL}/api/v1/space`, {
         name: "Test",
@@ -46,11 +103,13 @@ const CreateSpace = () => {
     setSelectedImageUrl(template.imageUrl);
 
     try {
-      await createSpace();
-      alert('Successfully created Space');
+      const elementIds = await createElements();
+      const mapId = await createMap(elementIds);
+      await createSpace(mapId);
+      alert('Successfully created elements, map, and space!');
     } catch (error) {
         console.log(error)
-      alert('Failed to create Space');
+      alert('Failed to create resources');
     }
   };
   
@@ -60,17 +119,20 @@ const CreateSpace = () => {
       const processedWidths = templatedata.map((item) => item.width);
       const processedHeights = templatedata.map((item) => item.height);
       const processedImageUrls = templatedata.map((item) => item.imageUrl);
-      
+      const processedThumbnailUrls = templatedata.map((item) => item.thumbnail);
+
       setName(processedNames);
       setWidth(processedWidths);
       setHeight(processedHeights);
       setImageUrl(processedImageUrls);
-      
+      setThumbnailUrl(processedThumbnailUrls);
+
       const processedData = templatedata.map((item) => ({
         name: item.name,
         width1: item.width,
         height: item.height,
         imageUrl: item.imageUrl,
+        thumbnailUrl: item.thumbnail,
       }));
       setTemplates(processedData);
     }
@@ -92,10 +154,13 @@ const CreateSpace = () => {
               height={height[index]} 
               onClick={(e) => {
                 setSelectedWidth(template.width)
+                console.log('template.width',selectedWidth);
+                console.log('template',template);
                 handleSubmit(e,template);
               }}
             />
             <h2>{name[index]}</h2>
+            <img src={thumbnailUrl[index]} hidden/>
           </div>
         ))}
       </div>
