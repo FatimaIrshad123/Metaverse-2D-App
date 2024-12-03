@@ -12,7 +12,7 @@ const SignupPage = () => {
     username: '',
     password: '',
     confirmPassword: '',
-    type: 'admin'
+    type: ''
   });
   const navigate = useNavigate();
 
@@ -22,6 +22,7 @@ const SignupPage = () => {
       [e.target.name]: e.target.value
     });
     setError('');
+    console.log('formData', formData)
   };
 
   const handleSubmit = async (e:any) => {
@@ -48,9 +49,16 @@ const SignupPage = () => {
             username: '',
             password: '',
             confirmPassword: '',
-            type: 'admin'
+            type: ''
           });
-          navigate('/signin')
+          if (formData.type === 'admin'){
+            localStorage.setItem('adminToken',response.data.token)
+            localStorage.setItem('adminId',response.data.id)
+          } if(formData.type === 'User') {
+            localStorage.setItem('userToken',response.data.token)
+            localStorage.setItem('userId',response.data.id)
+          }
+          navigate('/userdashboard')
     } catch (err:any) {
       setError(err.message || 'An error occurred during signup');
     } finally {
@@ -96,6 +104,22 @@ const SignupPage = () => {
               />
             </div>
 
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <User className="h-5 w-5 text-gray-400" />
+              </div>
+              <label htmlFor="type" className='text-gray-600 pl-2'>Role</label>
+              <input
+                name="type"
+                type="text"
+                required
+                value={formData.type}
+                onChange={handleInputChange}
+                className="appearance-none relative block w-full pl-3 pr-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg sm:text-sm transition-colors duration-200"
+                placeholder="Admin or User"
+              />
+            </div>
+
             {/* Password Input */}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -130,7 +154,7 @@ const SignupPage = () => {
               />
             </div>
           </div>
-
+          
           {/* Error Message */}
           {error && (
             <div className="flex items-center space-x-2 text-red-600 bg-red-50 p-3 rounded-lg">

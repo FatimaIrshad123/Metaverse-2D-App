@@ -3,7 +3,7 @@ import { AlertCircle, User, Lock, ArrowRight, CheckCircle } from 'lucide-react';
 import axios from 'axios';
 import { BACKENDURL } from '../url';
 import { useNavigate } from 'react-router-dom';
-
+import { jwtDecode } from 'jwt-decode';
 
 const SignInPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -22,26 +22,49 @@ const SignInPage = () => {
     });
     setError('');
   };
-
+  function getUserRole() {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      return null;
+    }
+  
+    try {
+      const decoded = jwtDecode(token);
+      console.log(decoded)
+      if (decoded.role === 'admin'){
+          localStorage.setItem('adminToken',token)
+          localStorage.setItem('adminId',decoded.userId)
+        } if(decoded.role === 'User') {
+          localStorage.setItem('userToken',token)
+          localStorage.setItem('userId',decoded.userId)
+        }
+      return decoded;
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+  getUserRole();
   const handleSubmit = async (e:any) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-
+    
     try {
         const response = await axios.post(`${BACKENDURL}/api/v1/signin`, {
             username: formData.username,
             password: formData.password,
           });
           console.log(response);
-          localStorage.setItem('adminToken',response.data.token)
-          localStorage.setItem('adminId',response.data.id)
     
           setSuccess('Signed in successfully!');
           setFormData({
             username: '',
             password: '',
           });
+
+          localStorage.setItem('token',response.data.token);
           navigate('/UserDashboard')
     } catch (err:any) {
       setError(err.message || 'An error occurred during signin');
