@@ -47,6 +47,7 @@ const SignupPage = () => {
         confirmPassword: '',
         type: ''
       });
+      localStorage.setItem('username',formData.username);
       if (formData.type === 'admin'){
         localStorage.setItem('adminToken',response.data.token)
         localStorage.setItem('adminId',response.data.id)

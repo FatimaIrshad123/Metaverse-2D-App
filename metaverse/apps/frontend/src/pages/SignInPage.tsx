@@ -62,6 +62,7 @@ const SignInPage = () => {
           });
 
           localStorage.setItem('token',response.data.token);
+          localStorage.setItem('username',formData.username);
           navigate('/UserDashboard')
     } catch (err:any) {
       setError(err.message || 'An error occurred during signin');
