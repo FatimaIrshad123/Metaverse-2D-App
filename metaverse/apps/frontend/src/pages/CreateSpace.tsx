@@ -14,7 +14,7 @@ const CreateSpace = () => {
   const [selectedWidth, setSelectedWidth] = useState<Number >(200)
   const [selectedHeight, setSelectedHeight] = useState<Number >(200)
   const [selectedImageUrl, setSelectedImageUrl] = useState<any>('https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
-  const [selectedName, setSelectedName] = useState('')
+  const [selectedName, setSelectedName] = useState<string>('Test')
 
   const BACKEND_URL = 'http://localhost:3000';
   let userToken = localStorage.getItem('userToken')
@@ -38,23 +38,6 @@ const CreateSpace = () => {
       throw error;
     }
   };
-
-  const handleSubmit = async (e: React.MouseEvent,template:any) => {
-    e.preventDefault();
-    setSelectedName(template.name)
-    setSelectedWidth(template.width1);
-    setSelectedHeight(template.height);
-    setSelectedImageUrl(template.imageUrl);
-
-    try {
-      await createSpace();
-      alert('Successfully created Space');
-      navigate('/space')
-    } catch (error) {
-        console.log(error)
-      alert('Failed to create Space');
-    }
-  };
   
   useEffect(() => {
     if (templatedata.length > 0) {
@@ -67,7 +50,7 @@ const CreateSpace = () => {
       setWidth(processedWidths);
       setHeight(processedHeights);
       setImageUrl(processedImageUrls);
-      
+      console.log('name',name)
       const processedData = templatedata.map((item) => ({
         name: item.name,
         width1: item.width,
@@ -77,6 +60,23 @@ const CreateSpace = () => {
       setTemplates(processedData);
     }
   }, [templatedata]);
+
+  const handleSubmit = async (e: React.MouseEvent,template:any) => {
+    e.preventDefault();
+    setSelectedName(template.name)
+    setSelectedWidth(template.width1);
+    setSelectedHeight(template.height);
+    setSelectedImageUrl(template.imageUrl);
+console.log(selectedHeight)
+    try {
+      await createSpace();
+      alert('Successfully created Space');
+      navigate('/space')
+    } catch (error) {
+        console.log(error)
+      alert('Failed to create Space');
+    }
+  };
 
   return (
     <div className="bg-white min-h-screen m-10">
@@ -94,6 +94,7 @@ const CreateSpace = () => {
               height={height[index]} 
               onClick={(e) => {
                 setSelectedWidth(template.width)
+                setSelectedName(template.name)
                 handleSubmit(e,template);
               }}
             />

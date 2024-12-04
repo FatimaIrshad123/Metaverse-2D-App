@@ -1,30 +1,25 @@
 import { useState } from 'react';
+import { BACKENDURL } from '../url';
+import axios from 'axios';
 
 const MetadataPage = () => {
   const [avatarId, setAvatarId] = useState('');
   const [message, setMessage] = useState('');
   const [isError, setIsError] = useState(false);
 
+  let userToken = localStorage.getItem('userToken');
+
   const handleUpdateMetadata = async () => {
     try {
-      const response = await fetch('/api/user/metadata', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ avatarId })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessage(data.message);
-        setIsError(false);
-      } else {
-        setMessage(data.message);
-        setIsError(true);
-      }
+      const response = await axios.post(`${BACKENDURL}/api/v1/user/metadata`, {
+        avatarId: avatarId
+      }, 
+      {
+        headers: { authorization: `Bearer ${userToken}` }
+      })
+      console.log(response);
     } catch (error) {
+      console.log(error)
       setMessage("Network error occurred");
       setIsError(true);
     }

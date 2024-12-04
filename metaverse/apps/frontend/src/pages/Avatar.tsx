@@ -24,6 +24,7 @@ const Avatar = () => {
       </div>
       <div>
         {avatars.map((avatar: any, index: number) => {
+          console.log(avatar.id)
           return (
             <div key={index}>
               <img src={avatar.imageUrl}/>
