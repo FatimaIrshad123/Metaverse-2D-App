@@ -37,7 +37,7 @@ const UserNavbar = () => {
                 <CalendarDays className='mt-0.5 pr-2'/>
                 Events
               </button>
-              <button className="text-white font-semibold flex mt-0 rounded-md p-2 px-7 ml-3">
+              <button className="text-white font-semibold flex mt-0 rounded-md p-2 px-7 ml-3" onClick={() => navigate('/allspaces')}>
               <Sparkles className='mt-0.5 pr-2'/>
                 My Spaces
               </button>

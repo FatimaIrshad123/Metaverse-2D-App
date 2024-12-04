@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { templatedata } from '../data/templatedata';
+import { useNavigate } from 'react-router-dom';
 
-const CreateSpace = () => {
-  
+const CreateSpace = () => {  
   const [imageUrl, setImageUrl] = useState<string[]>([]);
   const [mapId, setMapId] = useState<any>();
   const [spaceId, setSpaceId] = useState<any>();
@@ -18,11 +18,12 @@ const CreateSpace = () => {
 
   const BACKEND_URL = 'http://localhost:3000';
   let userToken = localStorage.getItem('userToken')
+  const navigate = useNavigate();
 
   const createSpace = async () => {
     try {
       const spaceResponse = await axios.post(`${BACKEND_URL}/api/v1/space`, {
-        name,
+        name: selectedName,
         dimensions: `${selectedWidth}x${selectedHeight}`,
         mapId
       }, {
@@ -48,6 +49,7 @@ const CreateSpace = () => {
     try {
       await createSpace();
       alert('Successfully created Space');
+      navigate('/space')
     } catch (error) {
         console.log(error)
       alert('Failed to create Space');

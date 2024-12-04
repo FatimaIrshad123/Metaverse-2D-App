@@ -10,6 +10,7 @@ import Arena from "./components/Game";
 import AvatarPage from "./pages/Avatar";
 import CreateAvatar from "./pages/CreateAvatar";
 import MetadataPage from "./components/UpdateUserMetadata";
+import AllSpaces from "./pages/AllSpaces";
 
 function App() {
   
@@ -28,6 +29,7 @@ function App() {
         <Route path="/avatar" element={<AvatarPage />} />
         <Route path="/createavatar" element={<CreateAvatar />} />
         <Route path="/updatemetadata" element={<MetadataPage />} />
+        <Route path="/allspaces" element={<AllSpaces />} />
       </Routes>
     </Router>
     </div>
