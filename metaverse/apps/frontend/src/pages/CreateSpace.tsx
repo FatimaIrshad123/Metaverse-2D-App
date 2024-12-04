@@ -13,7 +13,7 @@ const CreateSpace = () => {
   const [templates, setTemplates] = useState<any>([])
   const [selectedWidth, setSelectedWidth] = useState<Number >(200)
   const [selectedHeight, setSelectedHeight] = useState<Number >(200)
-  const [selectedImageUrl, setSelectedImageUrl] = useState<any>('https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+  const [selectedImageUrl, setSelectedImageUrl] = useState<any>('');
   const [selectedName, setSelectedName] = useState<string>('Test')
 
   const BACKEND_URL = 'http://localhost:3000';

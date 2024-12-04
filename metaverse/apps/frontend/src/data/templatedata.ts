@@ -1,58 +1,38 @@
+
 export const templatedata = [
     {
-        name: "Village",
+        name: "Conference Hall",
         height: "100",
-        width: "250",
-        thumbnail: "https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        imageUrl: "https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        width: "350",
+        thumbnail: "https://cdn.gather.town/v0/b/gather-town.appspot.com/o/remote-work-events%2Fuse-cases-covers%2Fconference.png?alt=media&amp;token=fb7a8707-51b2-483c-9753-d7b3ec5bee86",
+        imageUrl: "https://cdn.gather.town/v0/b/gather-town.appspot.com/o/remote-work-events%2Fuse-cases-covers%2Fconference.png?alt=media&amp;token=fb7a8707-51b2-483c-9753-d7b3ec5bee86"
     },
     {
-        name: "Village12",
+        name: "Remote Office",
         height: "100",
-        width: "250",
-        thumbnail: "https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        imageUrl: "https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        width: "350",
+        thumbnail: "https://cdn.gather.town/v0/b/gather-town.appspot.com/o/remote-work-events%2Fuse-cases-covers%2Fremote-work.png?alt=media&amp;token=9416a29b-02b8-4bf3-9335-74a396af0e86",
+        imageUrl: "https://cdn.gather.town/v0/b/gather-town.appspot.com/o/remote-work-events%2Fuse-cases-covers%2Fremote-work.png?alt=media&amp;token=9416a29b-02b8-4bf3-9335-74a396af0e86"
     },
     {
-        name: "Village12",
+        name: "Conference Hall",
         height: "100",
-        width: "250",
-        thumbnail: "https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        imageUrl: "https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        width: "350",
+        thumbnail: "https://cdn.gather.town/v0/b/gather-town.appspot.com/o/remote-work-events%2Fuse-cases-covers%2Fconference.png?alt=media&amp;token=fb7a8707-51b2-483c-9753-d7b3ec5bee86",
+        imageUrl: "https://cdn.gather.town/v0/b/gather-town.appspot.com/o/remote-work-events%2Fuse-cases-covers%2Fconference.png?alt=media&amp;token=fb7a8707-51b2-483c-9753-d7b3ec5bee86"
     },
     {
-        name: "Village12",
+        name: "Conference Hall",
         height: "100",
-        width: "250",
-        thumbnail: "https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        imageUrl: "https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        width: "350",
+        thumbnail: "https://cdn.gather.town/v0/b/gather-town.appspot.com/o/remote-work-events%2Fuse-cases-covers%2Fconference.png?alt=media&amp;token=fb7a8707-51b2-483c-9753-d7b3ec5bee86",
+        imageUrl: "https://cdn.gather.town/v0/b/gather-town.appspot.com/o/remote-work-events%2Fuse-cases-covers%2Fconference.png?alt=media&amp;token=fb7a8707-51b2-483c-9753-d7b3ec5bee86"
     },
     {
-        name: "Village12",
+        name: "Remote Office",
         height: "100",
-        width: "250",
-        thumbnail: "https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        imageUrl: "https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    },
-    {
-        name: "Village12",
-        height: "100",
-        width: "250",
-        thumbnail: "https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        imageUrl: "https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    },
-    {
-        name: "Village12",
-        height: "100",
-        width: "250",
-        thumbnail: "https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        imageUrl: "https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    },
-    {
-        name: "Village12",
-        height: "100",
-        width: "250",
-        thumbnail: "https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        imageUrl: "https://plus.unsplash.com/premium_photo-1668116307088-583ee0d4aaf7?q=80&w=1665&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        width: "350",
+        thumbnail: "https://cdn.gather.town/v0/b/gather-town.appspot.com/o/remote-work-events%2Fuse-cases-covers%2Fremote-work.png?alt=media&amp;token=9416a29b-02b8-4bf3-9335-74a396af0e86",
+        imageUrl: "https://cdn.gather.town/v0/b/gather-town.appspot.com/o/remote-work-events%2Fuse-cases-covers%2Fremote-work.png?alt=media&amp;token=9416a29b-02b8-4bf3-9335-74a396af0e86"
     }
 ]
