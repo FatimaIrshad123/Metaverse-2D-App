@@ -12,6 +12,7 @@ import CreateAvatar from "./pages/CreateAvatar";
 import MetadataPage from "./pages/UpdateMetadata";
 import AllSpaces from "./pages/AllSpaces";
 import UserMetadataPage from "./pages/UserMetadata";
+import SpacePage from "./pages/SelectedSpace";
 
 function App() {
   
@@ -32,6 +33,7 @@ function App() {
         <Route path="/updatemetadata" element={<MetadataPage />} />
         <Route path="/allspaces" element={<AllSpaces />} />
         <Route path="/usermetadata" element={<UserMetadataPage />} />
+        <Route path="/selectedspace" element={<SpacePage />} />
       </Routes>
     </Router>
     </div>
