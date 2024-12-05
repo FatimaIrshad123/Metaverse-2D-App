@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { templatedata } from '../data/templatedata';
 import { useNavigate } from 'react-router-dom';
+import UserNavbar from '../components/UserNavbar';
 
 const CreateSpace = () => {  
   const [imageUrl, setImageUrl] = useState<string[]>([]);
@@ -10,18 +11,20 @@ const CreateSpace = () => {
   const [width1, setWidth] = useState<Number| any> ();
   const [height, setHeight] = useState<Number| any> ();
   const [name, setName] = useState<string[]>([]);
-  const [templates, setTemplates] = useState<any>([])
+  const [templates, setTemplates] = useState<any>([]);
+  const [thumbnail,setThumbnail] = useState<any>('')
   
   const BACKEND_URL = 'http://localhost:3000';
   let userToken = localStorage.getItem('userToken')
   const navigate = useNavigate();
 
-  const createSpace = async (name: string, dimensions: string, imageUrl: string) => {
+  const createSpace = async (name: string, dimensions: string, imageUrl: string, thumbnail: string) => {
     try {
       const spaceResponse = await axios.post(`${BACKEND_URL}/api/v1/space`, {
         name,
         dimensions,
         imageUrl,
+        thumbnail,
         mapId
       }, {
         headers: { authorization: `Bearer ${userToken}` }
@@ -41,17 +44,20 @@ const CreateSpace = () => {
       const processedWidths = templatedata.map((item) => item.width);
       const processedHeights = templatedata.map((item) => item.height);
       const processedImageUrls = templatedata.map((item) => item.imageUrl);
+      const processedThumbnailUrls = templatedata.map((item) => item.thumbnail);
       
       setName(processedNames);
       setWidth(processedWidths);
       setHeight(processedHeights);
       setImageUrl(processedImageUrls);
+      setThumbnail(processedThumbnailUrls)
       
       const processedData = templatedata.map((item) => ({
         name: item.name,
         width1: item.width,
         height: item.height,
         imageUrl: item.imageUrl,
+        thumbnail: item.thumbnail
       }));
       setTemplates(processedData);
     }
@@ -59,10 +65,10 @@ const CreateSpace = () => {
 
   const handleSubmit = async (e: React.MouseEvent,template:any) => {
     e.preventDefault();
-    
-    const { name, width1, height, imageUrl} = template;
+    const { name, width1, height, imageUrl, thumbnail} = template;
+    console.log(template)
     try {
-      await createSpace(name, `${width1}x${height}`,imageUrl);
+      await createSpace(name, `${width1}x${height}`,imageUrl, thumbnail);
       alert('Successfully created Space');
       navigate('/space')
     } catch (error) {
@@ -78,12 +84,13 @@ const CreateSpace = () => {
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
     }}>
+      <UserNavbar />
     <div className="min-h-screen p-10">
       <div>
         <h2 className="font-bold text-2xl text-white">Select a Template</h2>
       </div>
       <div className='grid lg:grid-cols-4 md:grid-cols-3 gap-4 sm:justify-center mt-7'>
-        {templates.map((template:any, index:any) => {console.log('template',height[index])
+        {templates.map((template:any, index:any) => {
           return (
           <div key={index} className=''>
             <img
