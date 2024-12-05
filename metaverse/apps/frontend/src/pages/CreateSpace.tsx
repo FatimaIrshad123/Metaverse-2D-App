@@ -11,25 +11,21 @@ const CreateSpace = () => {
   const [height, setHeight] = useState<Number| any> ();
   const [name, setName] = useState<string[]>([]);
   const [templates, setTemplates] = useState<any>([])
-  const [selectedWidth, setSelectedWidth] = useState<Number >(200)
-  const [selectedHeight, setSelectedHeight] = useState<Number >(200)
-  const [selectedImageUrl, setSelectedImageUrl] = useState<any>('');
-  const [selectedName, setSelectedName] = useState<string>('Test')
-
+  
   const BACKEND_URL = 'http://localhost:3000';
   let userToken = localStorage.getItem('userToken')
   const navigate = useNavigate();
 
-  const createSpace = async () => {
+  const createSpace = async (name: string, dimensions: string, imageUrl: string) => {
     try {
       const spaceResponse = await axios.post(`${BACKEND_URL}/api/v1/space`, {
-        name: selectedName,
-        dimensions: `${selectedWidth}x${selectedHeight}`,
+        name,
+        dimensions,
+        imageUrl,
         mapId
       }, {
         headers: { authorization: `Bearer ${userToken}` }
       });
-
       setSpaceId(spaceResponse.data.spaceId);
       localStorage.setItem('spaceId',spaceResponse.data.spaceId)
       return spaceResponse.data.spaceId;
@@ -50,7 +46,7 @@ const CreateSpace = () => {
       setWidth(processedWidths);
       setHeight(processedHeights);
       setImageUrl(processedImageUrls);
-      console.log('name',name)
+      
       const processedData = templatedata.map((item) => ({
         name: item.name,
         width1: item.width,
@@ -63,13 +59,10 @@ const CreateSpace = () => {
 
   const handleSubmit = async (e: React.MouseEvent,template:any) => {
     e.preventDefault();
-    setSelectedName(template.name)
-    setSelectedWidth(template.width1);
-    setSelectedHeight(template.height);
-    setSelectedImageUrl(template.imageUrl);
-console.log(selectedHeight)
+    
+    const { name, width1, height, imageUrl} = template;
     try {
-      await createSpace();
+      await createSpace(name, `${width1}x${height}`,imageUrl);
       alert('Successfully created Space');
       navigate('/space')
     } catch (error) {
@@ -77,14 +70,21 @@ console.log(selectedHeight)
       alert('Failed to create Space');
     }
   };
-
+  
   return (
-    <div className="bg-white min-h-screen m-10">
+    <div className="" style={{
+      backgroundImage: "url('/bgh.avif')",
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+    }}>
+    <div className="min-h-screen p-10">
       <div>
-        <h2 className="font-bold text-2xl">Select a Template</h2>
+        <h2 className="font-bold text-2xl text-white">Select a Template</h2>
       </div>
-      <div className='grid lg:grid-cols-5 md:grid-cols-3 gap-4 sm:justify-center mt-7'>
-        {templates.map((template:any, index:any) => (
+      <div className='grid lg:grid-cols-4 md:grid-cols-3 gap-4 sm:justify-center mt-7'>
+        {templates.map((template:any, index:any) => {console.log('template',height[index])
+          return (
           <div key={index} className=''>
             <img
               className='rounded-lg'
@@ -93,16 +93,15 @@ console.log(selectedHeight)
               width={width1[index]} 
               height={height[index]} 
               onClick={(e) => {
-                setSelectedWidth(template.width)
-                setSelectedName(template.name)
                 handleSubmit(e,template);
               }}
             />
-            <h2>{name[index]}</h2>
+            <h2 className='text-white pt-3'>{name[index]}</h2>
           </div>
-        ))}
+        )})}
       </div>
     </div>
+   </div>
   )
 };
 
