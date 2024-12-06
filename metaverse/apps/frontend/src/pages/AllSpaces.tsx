@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { BACKENDURL } from "../url"
 import axios from 'axios';
 import UserNavbar from "../components/UserNavbar";
+import { useNavigate } from "react-router-dom";
 
 const AllSpaces = () => {
     const [spaces, setSpaces] =  useState<any[]>([]);
 
+    const navigate = useNavigate();
     let userToken = localStorage.getItem('userToken')
     useEffect (() => {
         const getspace = async() => {
@@ -43,7 +45,10 @@ const AllSpaces = () => {
           return (
             <div key={index} style={{width:'100%', height:'100%', backgroundSize: 'cover', backgroundRepeat:'no-repeat', backgroundPosition:'center'}}>
               <img src='https://cdn.gather.town/storage.googleapis.com/gather-town.appspot.com/uploads/N4XpyYnWRAiFz9CP/jDBuCZ53Lz9AwEGxROt7m4'
-              className="rounded-lg" />
+              className="rounded-lg" onClick={() => {
+                navigate('/spaces');
+                localStorage.setItem('spaceName',space.name)
+                localStorage.setItem('spaceId',space.id)}}/>
               <h2 className="text-white font-bold">{space.name}</h2>
             </div>
           )

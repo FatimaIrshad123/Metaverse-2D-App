@@ -45,27 +45,19 @@ const SpacePage = () => {
   }
 
   return (
-    <div
-      className="min-h-screen p-10"
-      style={{
-        backgroundImage: "url('/bgh.avif')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
+    <div>
       <div>
-        <button
-          onClick={() => navigate(-1)}
-          className="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-600"
-        >
-          Go Back
-        </button>
         <h2 className="font-bold text-2xl text-white mt-5">Space Details</h2>
         <p className="text-gray-300 mt-3">Dimensions: {dimensions}</p>
       </div>
 
-      <div className="grid lg:grid-cols-4 md:grid-cols-3 gap-4 sm:justify-center mt-7">
+      <div className="grid lg:grid-cols-4 md:grid-cols-3 gap-4 sm:justify-center mt-7" 
+      style={{
+        backgroundImage: "url('https://cdn.gather.town/storage.googleapis.com/gather-town.appspot.com/uploads/N4XpyYnWRAiFz9CP/jDBuCZ53Lz9AwEGxROt7m4')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}>
         {elements.map((e) => (
           <div key={e.id} className="bg-gray-800 p-4 rounded-lg shadow-lg">
             <img
