@@ -23,7 +23,20 @@ const AllSpaces = () => {
         }
         getspace();
     },[])
-  
+
+    const deleteSpace = async(spaceId:any) => {
+      try {
+        let response = await axios.delete(`${BACKENDURL}/api/v1/space/${spaceId}`,{
+          headers: { authorization: `Bearer ${userToken}`}
+        });
+        setSpaces((prevSpaces) => prevSpaces.filter((space) => space.id !== spaceId));
+        alert('Space Deleted Successfully!');
+        return response;
+      }catch (error){
+        console.log(error);
+        alert('Error occured while deleting the space')
+      }
+    }
     
     if (spaces.length == 0) {
       return <div>You have no space currently</div>
@@ -49,7 +62,10 @@ const AllSpaces = () => {
                 navigate('/spaces');
                 localStorage.setItem('spaceName',space.name)
                 localStorage.setItem('spaceId',space.id)}}/>
-              <h2 className="text-white font-bold">{space.name}</h2>
+              <div className="flex justify-between px-2">
+                <h2 className="text-white font-bold">{space.name}</h2>
+                <button className="text-white font-bold" onClick={() => deleteSpace(space.id)}>Delete</button>
+              </div>
             </div>
           )
         })}
