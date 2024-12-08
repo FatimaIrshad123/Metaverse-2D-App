@@ -12,10 +12,10 @@ class SpaceScene extends Phaser.Scene {
 
     preload() {
         // Load images for furniture (Make sure the paths are correct)
-        this.load.image('table', 'table.jpeg');
-        this.load.image('chair', 'sofa.jpg');
-        this.load.image('sofa', 'sofa.jpg'); // Additional furniture for variety
-        this.load.image('background', 'homebg.avif'); // Background image for the scene
+        this.load.image('table', 'tableset.png');
+        this.load.image('conferencetable', 'conferencetable.png');
+        this.load.image('sofa', 'sofaset.png'); // Additional furniture for variety
+        this.load.image('background', 'https://cdn.gather.town/storage.googleapis.com/gather-town.appspot.com/uploads/N4XpyYnWRAiFz9CP/jDBuCZ53Lz9AwEGxROt7m4'); // Background image for the scene
     }
 
     create() {
@@ -25,14 +25,6 @@ class SpaceScene extends Phaser.Scene {
 
         // Create furniture layout with different areas
         this.createFurnitureLayout();
-
-        // Add title text
-        this.add.text(
-            this.cameras.main.width / 2,
-            30,
-            'Interactive Office Space Layout',
-            { font: '24px Arial', color: '#000000' }
-        ).setOrigin(0.5);
     }
 
     createGrid() {
@@ -50,31 +42,17 @@ class SpaceScene extends Phaser.Scene {
         }
     }
 
-    createFurnitureLayout() {
+   createFurnitureLayout() {
         const furnitureConfig = [
-            // Conference Room Area
-            { type: 'table', x: 200, y: 200, width: 200, height: 100, name: 'Conference Table' },
-            { type: 'chair', x: 150, y: 150, width: 50, height: 50, name: 'Chair 1' },
-            { type: 'chair', x: 250, y: 150, width: 50, height: 50, name: 'Chair 2' },
-            { type: 'chair', x: 350, y: 150, width: 50, height: 50, name: 'Chair 3' },
-
-            // Collaboration Area
-            { type: 'sofa', x: 600, y: 400, width: 200, height: 100, name: 'Collaboration Sofa' },
-            { type: 'chair', x: 550, y: 350, width: 50, height: 50, name: 'Collab Chair 1' },
-            { type: 'chair', x: 650, y: 350, width: 50, height: 50, name: 'Collab Chair 2' },
-
-            // Casual Area
-            { type: 'table', x: 100, y: 450, width: 120, height: 70, name: 'Casual Table' },
-            { type: 'chair', x: 50, y: 400, width: 50, height: 50, name: 'Casual Chair 1' },
-            { type: 'chair', x: 150, y: 400, width: 50, height: 50, name: 'Casual Chair 2' },
-
-            // Lounge Area
-            { type: 'sofa', x: 500, y: 100, width: 250, height: 120, name: 'Lounge Sofa' },
+            { type: 'table', x: 250, y: 100, width: 200, height: 100},
+            { type: 'conferencetable', x: 700, y: 50, width: 150, height: 100 },
+            { type: 'sofa', x: 600, y: 600, width: 200, height: 100 },
+            { type: 'sofa', x: 300, y: 600, width: 200, height: 100 },
         ];
 
         // Create furniture with enhanced interactions
         furnitureConfig.forEach((config) => {
-            const imageKey = config.type === 'table' ? 'table' : config.type === 'sofa' ? 'sofa' : 'chair';
+            const imageKey = config.type === 'table' ? 'table' : config.type === 'sofa' ? 'sofa' : config.type === 'conferencetable' ? 'conferencetable': 'chair';
             const furniture = this.add.image(config.x, config.y, imageKey)
                 .setOrigin(0)
                 .setInteractive()
@@ -122,8 +100,7 @@ const PhaserSpaceLayout = () => {
         // Game configuration
         const config: Phaser.Types.Core.GameConfig = {
             type: Phaser.AUTO,
-            width: 800,
-            height: 600,
+            
             parent: parentEl.current!,
             scene: [SpaceScene],
             backgroundColor: 0xf0f0f0
@@ -143,11 +120,6 @@ const PhaserSpaceLayout = () => {
 
     return (
         <div className="p-4 bg-gray-100">
-            <div className="mb-4">
-                <h2 className="text-2xl font-bold text-center">Interactive Office Space Layout</h2>
-                <p className="text-center text-gray-600 mt-2">Click on furniture to select, hover to highlight</p>
-            </div>
-
             <div ref={parentEl} className="mx-auto border-2 border-gray-300 rounded-lg shadow-lg"></div>
         </div>
     );
