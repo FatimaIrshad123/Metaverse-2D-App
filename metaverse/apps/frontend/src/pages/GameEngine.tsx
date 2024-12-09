@@ -1,164 +1,196 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Phaser from 'phaser';
 
-class SpaceScene extends Phaser.Scene {
-  constructor() {
-    super({ key: 'SpaceScene' });
-    this.stars = [];
-    this.parallaxLayers = [];
-  }
-
-  preload() {
-    // Load room elements
-    this.load.image('floor', '/api/placeholder/400/300');
-    this.load.image('wall', '/api/placeholder/400/300');
-    this.load.image('star', '/api/placeholder/10/10');
-    this.load.image('table', '/api/placeholder/200/150');
-    this.load.image('sofa', '/api/placeholder/250/150');
-    this.load.image('chair', '/api/placeholder/100/100');
-  }
-
-  create() {
-    const width = this.cameras.main.width;
-    const height = this.cameras.main.height;
-
-    // Background layers with parallax effect
-    this.createParallaxBackground(width, height);
-
-    // Create interactive furniture
-    this.createFurniture(width, height);
-
-    // Create subtle star animation
-    this.createStarField(width, height);
-  }
-
-  createParallaxBackground(width, height) {
-    // Wall background
-    const wall = this.add.image(width / 2, height / 2, 'wall')
-      .setDisplaySize(width, height)
-      .setAlpha(0.7);
-    this.parallaxLayers.push(wall);
-
-    // Floor with slight movement
-    const floor = this.add.image(width / 2, height / 2, 'floor')
-      .setDisplaySize(width * 0.9, height * 0.8)
-      .setAlpha(0.9);
-    this.parallaxLayers.push(floor);
-  }
-
-  createFurniture(width, height) {
-    // Table
-    const table = this.add.image(width / 2, height / 2, 'table')
-      .setInteractive()
-      .on('pointerover', () => table.setTint(0x88ff88))
-      .on('pointerout', () => table.clearTint());
-
-    // Sofas
-    const sofa1 = this.add.image(width * 0.3, height * 0.8, 'sofa')
-      .setInteractive()
-      .on('pointerover', () => sofa1.setTint(0x88ff88))
-      .on('pointerout', () => sofa1.clearTint());
-
-    const sofa2 = this.add.image(width * 0.7, height * 0.8, 'sofa')
-      .setInteractive()
-      .on('pointerover', () => sofa2.setTint(0x88ff88))
-      .on('pointerout', () => sofa2.clearTint());
-
-    // Chairs
-    const chairs = [
-      { x: width * 0.4, y: height * 0.4 },
-      { x: width * 0.6, y: height * 0.4 },
-      { x: width * 0.4, y: height * 0.6 },
-      { x: width * 0.6, y: height * 0.6 }
-    ];
-
-    chairs.forEach(pos => {
-      const chair = this.add.image(pos.x, pos.y, 'chair')
-        .setInteractive()
-        .on('pointerover', () => chair.setTint(0x88ff88))
-        .on('pointerout', () => chair.clearTint());
-    });
-  }
-
-  createStarField(width, height) {
-    // Create a subtle star field with movement
-    for (let i = 0; i < 100; i++) {
-      const x = Phaser.Math.Between(0, width);
-      const y = Phaser.Math.Between(0, height);
-      const star = this.add.image(x, y, 'star')
-        .setAlpha(Phaser.Math.FloatBetween(0.1, 0.5));
-      
-      // Subtle star movement
-      this.tweens.add({
-        targets: star,
-        x: x + Phaser.Math.Between(-20, 20),
-        y: y + Phaser.Math.Between(-20, 20),
-        duration: Phaser.Math.Between(3000, 5000),
-        yoyo: true,
-        repeat: -1,
-        ease: 'Sine.easeInOut'
-      });
-
-      this.stars.push(star);
-    }
-  }
-
-  update() {
-    // Parallax effect
-    this.parallaxLayers.forEach((layer, index) => {
-      const parallaxFactor = (index + 1) * 0.1;
-      layer.x = this.cameras.main.scrollX * parallaxFactor;
-      layer.y = this.cameras.main.scrollY * parallaxFactor;
-    });
-  }
-}
-
-const InteractiveSpace = () => {
+const VirtualOfficeSpace = () => {
   const gameRef = useRef(null);
-  const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
+    // Prevent multiple game instances
+    if (gameRef.current?.children.length) return;
+
+    // Base64 encoded placeholder images (replace with actual images)
+    const images = {
+      garden: 'https://cdn.gather.town/storage.googleapis.com/gather-town.appspot.com/uploads/N4XpyYnWRAiFz9CP/jDBuCZ53Lz9AwEGxROt7m4',
+      conferenceRoom: 'conferenceroom.jpg',
+      courtyard: 'https://cdn.gather.town/storage.googleapis.com/gather-town.appspot.com/uploads/N4XpyYnWRAiFz9CP/jDBuCZ53Lz9AwEGxROt7m4',
+      officePlace: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
+    };
+
+    // Scene class for the virtual space
+    class VirtualOfficeScene extends Phaser.Scene {
+      preload() {
+        // Load area images
+        this.load.image('garden', images.garden);
+        this.load.image('conferenceRoom', images.conferenceRoom);
+        this.load.image('courtyard', images.courtyard);
+        this.load.image('officePlace', images.officePlace);
+      }
+
+      create() {
+        const width = this.cameras.main.width;
+        const height = this.cameras.main.height;
+
+        // Define areas with images and positions
+        const areas = [
+          {
+            name: 'Garden',
+            key: 'garden',
+            x: width * 0.25,
+            y: height * 0.25,
+            width: width * 0.4,
+            height: height * 0.4
+          },
+          {
+            name: 'Conference Room',
+            key: 'conferenceRoom',
+            x: width * 0.75,
+            y: height * 0.25,
+            width: width * 0.4,
+            height: height * 0.4
+          },
+          {
+            name: 'Courtyard',
+            key: 'courtyard',
+            x: width * 0.25,
+            y: height * 0.75,
+            width: width * 0.4,
+            height: height * 0.4
+          },
+          {
+            name: 'Office Place',
+            key: 'officePlace',
+            x: width * 0.75,
+            y: height * 0.75,
+            width: width * 0.4,
+            height: height * 0.4
+          }
+        ];
+
+        // Create areas with images
+        areas.forEach(area => {
+          // Create area image
+          const areaImage = this.add.image(area.x, area.y, area.key);
+          areaImage.setDisplaySize(area.width, area.height);
+
+          // Add area name text
+          const text = this.add.text(
+            area.x - area.width / 2 + 10, 
+            area.y - area.height / 2 + 10, 
+            area.name, 
+            { 
+              font: '16px Arial', 
+              color: '#000000' 
+            }
+          );
+
+          // Add some interactive elements
+          this.addAreaElements(this, area);
+        });
+
+        // Enable camera drag to move around
+        this.cameras.main.setScroll(0, 0);
+      }
+
+      addAreaElements(scene, area) {
+        // Add some simple elements to each area
+        switch(area.name) {
+          case 'Garden':
+            // Add some trees
+            scene.add.circle(
+              area.x - area.width/4, 
+              area.y + area.height/4, 
+              20, 
+              0x228B22
+            );
+            scene.add.circle(
+              area.x + area.width/4, 
+              area.y - area.height/4, 
+              15, 
+              0x228B22
+            );
+            break;
+          
+          case 'Conference Room':
+            // Add a table and chairs
+            scene.add.rectangle(
+              area.x, 
+              area.y, 
+              area.width/2, 
+              area.height/3, 
+              0x8B4513
+            );
+            scene.add.circle(
+              area.x - area.width/4, 
+              area.y - area.height/4, 
+              10, 
+              0xA0522D
+            );
+            scene.add.circle(
+              area.x + area.width/4, 
+              area.y + area.height/4, 
+              10, 
+              0xA0522D
+            );
+            break;
+          
+          case 'Courtyard':
+            // Add a fountain
+            scene.add.circle(
+              area.x, 
+              area.y, 
+              30, 
+              0x4169E1
+            );
+            break;
+          
+          case 'Office Place':
+            // Add desks
+            scene.add.rectangle(
+              area.x - area.width/4, 
+              area.y - area.height/4, 
+              area.width/3, 
+              area.height/5, 
+              0xD2691E
+            );
+            scene.add.rectangle(
+              area.x + area.width/4, 
+              area.y + area.height/4, 
+              area.width/3, 
+              area.height/5, 
+              0xD2691E
+            );
+            break;
+        }
+      }
+    }
+
     // Phaser game configuration
     const config = {
       type: Phaser.AUTO,
       parent: gameRef.current,
       width: window.innerWidth,
       height: window.innerHeight,
-      scene: [SpaceScene],
-      backgroundColor: 0x000033,
+      scene: VirtualOfficeScene,
       scale: {
-        mode: Phaser.Scale.RESIZE,
-        autoCenter: Phaser.Scale.CENTER_BOTH
+        mode: Phaser.Scale.RESIZE
       }
     };
 
     // Create game instance
     const game = new Phaser.Game(config);
 
-    // Cleanup on component unmount
+    // Cleanup function
     return () => {
       game.destroy(true);
     };
   }, []);
 
   return (
-    <div className="fixed inset-0 overflow-hidden">
-      {/* Phaser Game Container */}
-      <div ref={gameRef} className="absolute inset-0 z-0"></div>
-
-      {/* Overlay Info */}
-      {selectedItem && (
-        <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 
-          bg-white/30 backdrop-blur-md rounded-full px-6 py-2 
-          flex items-center space-x-2 shadow-lg z-50">
-          <span>📍</span>
-          <span className="text-white font-medium">
-            {selectedItem}
-          </span>
-        </div>
-      )}
-    </div>
+    <div 
+      ref={gameRef} 
+      className="w-full h-screen"
+    ></div>
   );
 };
 
-export default InteractiveSpace;
+export default VirtualOfficeSpace;
