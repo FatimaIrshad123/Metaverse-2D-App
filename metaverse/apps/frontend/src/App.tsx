@@ -14,8 +14,6 @@ import AllSpaces from "./pages/AllSpaces";
 import UserMetadataPage from "./pages/UserMetadata";
 import SpacePage from "./pages/SelectedSpace";
 import PhaserGame from "./pages/Spacepractice";
-import VirtualOfficeSpace from "./pages/GameEngine";
-//import GameComponent from "./pages/GameEngine";
 
 function App() {
   
@@ -38,7 +36,6 @@ function App() {
         <Route path="/usermetadata" element={<UserMetadataPage />} />
         <Route path="/selectedspace" element={<SpacePage />} />
         <Route path="/spacepractice" element={<PhaserGame />} />
-        <Route path="/gameengine" element={<VirtualOfficeSpace/>}/>
       </Routes>
     </Router>
     </div>
