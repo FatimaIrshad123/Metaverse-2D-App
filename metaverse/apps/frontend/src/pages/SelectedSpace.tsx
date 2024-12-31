@@ -8,7 +8,7 @@ const SpacePage = () => {
   const [elements, setElements] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const userToken = localStorage.getItem('userToken');
   let spaceId = localStorage.getItem('spaceId')
