@@ -25,7 +25,7 @@ class GameScene extends Phaser.Scene {
     this.avatar = this.physics.add.sprite(sizes.width / 2, sizes.height / 2, 'avatar');
     this.avatar.setCollideWorldBounds(true);
 
-    this.cursors = this.input.keyboard?.createCursorKeys() ?? undefined;
+    this.cursors = this.input.keyboard!.createCursorKeys() ?? undefined;
   }
 
   update() {
