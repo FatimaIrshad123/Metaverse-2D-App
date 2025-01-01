@@ -14,6 +14,7 @@ import AllSpaces from "./pages/AllSpaces";
 import UserMetadataPage from "./pages/UserMetadata";
 import SpacePage from "./pages/SelectedSpace";
 import PhaserGame from "./pages/Spacepractice";
+import PhaserPractice from "./pages/PhaserPractice";
 
 function App() {
   
@@ -36,6 +37,7 @@ function App() {
         <Route path="/usermetadata" element={<UserMetadataPage />} />
         <Route path="/selectedspace" element={<SpacePage />} />
         <Route path="/spacepractice" element={<PhaserGame />} />
+        <Route path="/phaserpractice" element={<PhaserPractice />} />
       </Routes>
     </Router>
     </div>

@@ -20,7 +20,7 @@ class SpaceScene extends Phaser.Scene {
 
     create() {
         // Set background image and grid
-        this.add.image(400, 300, 'background').setOrigin(0.5); // Centered background
+        this.add.image(0, 0, 'background').setOrigin(0,0); // Centered background
         this.createGrid();
 
         // Create furniture layout with different areas
