@@ -7,18 +7,16 @@ const Arena = () => {
   const [users, setUsers] = useState(new Map());
   const [params, setParams] = useState({ token: '', spaceId: '' });
 
-  // Initialize WebSocket connection and handle URL params
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token') || '';
     const spaceId = urlParams.get('spaceId') || '';
     setParams({ token, spaceId });
 
-    // Initialize WebSocket
-    wsRef.current = new WebSocket('ws://localhost:3001'); // Replace with your WS_URL
-    
+    wsRef.current = new WebSocket('ws://localhost:3001',token); // Replace with your WS_URL
+    //console.log('wsRef.current',wsRef.current)
     wsRef.current.onopen = () => {
-      // Join the space once connected
+      
       wsRef.current.send(JSON.stringify({
         type: 'join',
         payload: {
@@ -30,6 +28,7 @@ const Arena = () => {
 
     wsRef.current.onmessage = (event: any) => {
       const message = JSON.parse(event.data);
+      console.log('message',message)
       handleWebSocketMessage(message);
     };
 
@@ -43,8 +42,7 @@ const Arena = () => {
   const handleWebSocketMessage = (message: any) => {
     switch (message.type) {
       case 'space-joined':
-        // Initialize current user position and other users
-        console.log("set")
+        console.log('message.payload',message.payload)
         console.log({
             x: message.payload.spawn.x,
             y: message.payload.spawn.y,
@@ -56,7 +54,6 @@ const Arena = () => {
           userId: message.payload.userId
         });
         
-        // Initialize other users from the payload
         const userMap = new Map();
         message.payload.users.forEach((user: any) => {
           userMap.set(user.userId, user);
@@ -90,7 +87,6 @@ const Arena = () => {
         break;
 
       case 'movement-rejected':
-        // Reset current user position if movement was rejected
         setCurrentUser((prev: any) => ({
           ...prev,
           x: message.payload.x,
@@ -108,11 +104,8 @@ const Arena = () => {
     }
   };
 
-  // Handle user movement
   const handleMove = (newX: any, newY: any) => {
     if (!currentUser) return;
-    
-    // Send movement request
     wsRef.current.send(JSON.stringify({
       type: 'move',
       payload: {
@@ -123,17 +116,13 @@ const Arena = () => {
     }));
   };
 
-  // Draw the arena
   useEffect(() => {
-    console.log("render")
     const canvas = canvasRef.current;
     if (!canvas) return;
-    console.log("below render")
     
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw grid
     ctx.strokeStyle = '#eee';
     for (let i = 0; i < canvas.width; i += 50) {
       ctx.beginPath();

@@ -16,6 +16,7 @@ const CreateSpace = () => {
   
   const BACKEND_URL = 'http://localhost:3000';
   let userToken = localStorage.getItem('userToken')
+  let token = localStorage.getItem('token')
   const navigate = useNavigate();
 
   const createSpace = async (name: string, dimensions: string, imageUrl: string, thumbnail: string) => {
@@ -27,7 +28,7 @@ const CreateSpace = () => {
         thumbnail,
         mapId
       }, {
-        headers: { authorization: `Bearer ${userToken}` }
+        headers: { authorization: `Bearer ${token}` }
       });
       setSpaceId(spaceResponse.data.spaceId);
       localStorage.setItem('spaceId',spaceResponse.data.spaceId)
