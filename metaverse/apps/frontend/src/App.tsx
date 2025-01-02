@@ -15,6 +15,7 @@ import UserMetadataPage from "./pages/UserMetadata";
 import SpacePage from "./pages/SelectedSpace";
 import PhaserGame from "./pages/Spacepractice";
 import PhaserPractice from "./pages/PhaserPractice";
+import Game123 from "./components/Game123";
 
 function App() {
   
@@ -29,7 +30,7 @@ function App() {
         <Route path="/spaces" element={<MySpaces />} />
         <Route path="/space" element={<Space />} />
         <Route path="/createspace" element={<CreateSpace />}/>
-        <Route path="/game" element={<Arena />} />
+        <Route path="/game" element={<Game123 />} />
         <Route path="/avatar" element={<AvatarPage />} />
         <Route path="/createavatar" element={<CreateAvatar />} />
         <Route path="/updatemetadata" element={<MetadataPage />} />

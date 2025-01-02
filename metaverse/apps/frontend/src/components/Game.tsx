@@ -9,8 +9,8 @@ const Arena = () => {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token') || '';
-    const spaceId = urlParams.get('spaceId') || '';
+    const token = urlParams.get('token') || localStorage.getItem('token') || '';
+    const spaceId = urlParams.get('spaceId') || localStorage.getItem('spaceId') || '';
     setParams({ token, spaceId });
 
     wsRef.current = new WebSocket('ws://localhost:3001',token); // Replace with your WS_URL
