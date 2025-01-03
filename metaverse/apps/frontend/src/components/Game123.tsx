@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 
 export default function Game123 () {
   const canvasRef = useRef<any>(null);
-  const [currentUser, setCurrentUser] = useState<any>({});
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [users, setUsers] = useState(new Map());
-    
+  
   let token = localStorage.getItem('token')
   let spaceId = localStorage.getItem('spaceId')
   const ws = React.useRef<any>();
@@ -12,11 +12,10 @@ export default function Game123 () {
 useEffect (() => {
   let token = localStorage.getItem('token')
   let spaceId = localStorage.getItem('spaceId')
-  let userId = localStorage.getItem('userId')
-
+ 
   ws.current = new WebSocket('ws://localhost:3001');
 
-  if (!token || !spaceId || !userId) {
+  if (!token || !spaceId) {
     console.error('Missing token, spaceId, or userId in localStorage');
     return;
   }
@@ -28,13 +27,13 @@ useEffect (() => {
       payload: {
         spaceId,
         token,
-        userId
       }
     }));
   };
 
   ws.current.onmessage = (event: any) => {
     const message = JSON.parse(event.data);
+    console.log('message',message)
     handleWebSocketMessage(message)
   };
 
@@ -47,6 +46,7 @@ useEffect (() => {
 
   const handleWebSocketMessage = (message: any) => {
     let data = message.payload;
+    console.log('data',data)
     const userId = data.users?.map((user:any) => user.id).join(',')
     
     switch (message.type) {
@@ -55,12 +55,20 @@ useEffect (() => {
           x: message.payload.spawn.x,
           y: message.payload.spawn.y,
           userId: userId
-        });
-        const userMap = new Map();
+        })
+        const userMap = new Map(users);
         message.payload.users.forEach((user: any) => {
-          userMap.set(user.id, user);
+          console.log('user123',user)
+          userMap.set(user.id,{
+            x: message.payload.spawn.x,
+            y: message.payload.spawn.y,
+            userId: userId
+          });
         });
+        console.log('currentUser',currentUser)
         setUsers(userMap);
+        console.log('users',users)
+        console.log('usersMap',userMap)
         break;
 
       case 'user-joined':
@@ -76,6 +84,7 @@ useEffect (() => {
         break;
 
       case 'movement':
+        console.log('movement')
         setUsers(prev => {
           const newUsers = new Map(prev);
           const user = newUsers.get(message.payload.userId);
@@ -89,11 +98,13 @@ useEffect (() => {
         break;
 
       case 'movement-rejected':
+        console.log('movement-rejected')
         setCurrentUser((prev: any) => ({
           ...prev,
           x: message.payload.x,
           y: message.payload.y
         }));
+        console.log('currentUser123',currentUser)
         break;
 
       case 'user-left':
@@ -105,6 +116,11 @@ useEffect (() => {
         break;
     }
   };
+  useEffect(() => {
+    console.log("Users state updated:", users);
+  }, [users]);
+  
+  console.log('Updated currentUser123456:', currentUser);
   const handleMove = (newX: any, newY: any) => {
     if (!currentUser) return;
     ws.current.send(JSON.stringify({
@@ -116,7 +132,7 @@ useEffect (() => {
       }
     }));
   };
-
+console.log('currentUser.userId',users)
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -150,9 +166,12 @@ useEffect (() => {
 
     // Draw other users
     users.forEach(user => {
+      console.log('userabcd',user)
     if (!user.x) {
+      console.log('after')
         return
     }
+    console.log('before')
       ctx.beginPath();
       ctx.fillStyle = '#4ECDC4';
       ctx.arc(user.x * 50, user.y * 50, 20, 0, Math.PI * 2);
