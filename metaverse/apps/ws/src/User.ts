@@ -62,10 +62,12 @@ export class User {
                             spawn: {
                                 x: this.x,
                                 y: this.y,
+                                id : RoomManager.getInstance().rooms.get(spaceId)?.find(x => x.id === this.id)?.id || null
                             },
                             users: RoomManager.getInstance().rooms.get(spaceId)?.filter(x => x.id === this.id)?.map((u) => ({id: u.id})) ?? []
                         } 
                     });
+                    
                     RoomManager.getInstance().broadcast({
                         type: "user-joined",
                         payload: {

@@ -4,7 +4,7 @@ export default function Game123 () {
   const canvasRef = useRef<any>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [users, setUsers] = useState(new Map());
-  
+
   let token = localStorage.getItem('token')
   let spaceId = localStorage.getItem('spaceId')
   const ws = React.useRef<any>();
@@ -36,7 +36,7 @@ useEffect (() => {
     console.log('message',message)
     handleWebSocketMessage(message)
   };
-
+  
   return () => {
     if (ws.current) {
       ws.current.close();
@@ -45,24 +45,21 @@ useEffect (() => {
   }, []);
 
   const handleWebSocketMessage = (message: any) => {
-    let data = message.payload;
-    console.log('data',data)
-    const userId = data.users?.map((user:any) => user.id).join(',')
     
     switch (message.type) {
       case 'space-joined':
         setCurrentUser({
           x: message.payload.spawn.x,
           y: message.payload.spawn.y,
-          userId: userId
+          userId: message.payload.spawn.id
         })
-        const userMap = new Map(users);
+        const userMap = new Map([...users]);
         message.payload.users.forEach((user: any) => {
           console.log('user123',user)
           userMap.set(user.id,{
             x: message.payload.spawn.x,
             y: message.payload.spawn.y,
-            userId: userId
+            userId: user.id
           });
         });
         console.log('currentUser',currentUser)
@@ -77,7 +74,7 @@ useEffect (() => {
           newUsers.set(message.payload.userId, {
             x: message.payload.x,
             y: message.payload.y,
-            userId: userId
+            userId: message.payload.id
           });
           return newUsers;
         });
@@ -98,7 +95,7 @@ useEffect (() => {
         break;
 
       case 'movement-rejected':
-        console.log('movement-rejected')
+        console.log('movement-rejected',message.payload)
         setCurrentUser((prev: any) => ({
           ...prev,
           x: message.payload.x,
@@ -116,21 +113,23 @@ useEffect (() => {
         break;
     }
   };
-  useEffect(() => {
-    console.log("Users state updated:", users);
-  }, [users]);
   
-  console.log('Updated currentUser123456:', currentUser);
+  
   const handleMove = (newX: any, newY: any) => {
     if (!currentUser) return;
-    ws.current.send(JSON.stringify({
-      type: 'move',
-      payload: {
-        x: newX,
-        y: newY,
-        userId: currentUser.userId
-      }
-    }));
+console.log('handlemove', newX, newY)
+    const xDisplacement = Math.abs(currentUser.x - newX);
+    const yDisplacement = Math.abs(currentUser.y - newY);
+
+    if ((xDisplacement === 1 && yDisplacement === 0) || (xDisplacement === 0 && yDisplacement === 1)) {
+      ws.current.send(JSON.stringify({
+          type: 'move',
+          payload: { x: newX, y: newY }
+      }));
+  } else {
+      console.warn('Invalid move attempted:', { x: newX, y: newY });
+  }
+    
   };
 console.log('currentUser.userId',users)
   useEffect(() => {
