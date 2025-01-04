@@ -117,7 +117,7 @@ useEffect (() => {
   
   const handleMove = (newX: any, newY: any) => {
     if (!currentUser) return;
-console.log('handlemove', newX, newY)
+    console.log('handlemove', newX, newY)
     const xDisplacement = Math.abs(currentUser.x - newX);
     const yDisplacement = Math.abs(currentUser.y - newY);
 
@@ -129,7 +129,6 @@ console.log('handlemove', newX, newY)
   } else {
       console.warn('Invalid move attempted:', { x: newX, y: newY });
   }
-    
   };
 console.log('currentUser.userId',users)
   useEffect(() => {

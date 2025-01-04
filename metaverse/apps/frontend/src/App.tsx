@@ -6,7 +6,7 @@ import UserDashboard from "./pages/UserDashboard";
 import MySpaces from "./pages/MySpaces";
 import Space from "./components/Space";
 import CreateSpace from "./pages/CreateSpace";
-import Arena from "./components/Game";
+//import Arena from "./components/Game";
 import AvatarPage from "./pages/Avatar";
 import CreateAvatar from "./pages/CreateAvatar";
 import MetadataPage from "./pages/UpdateMetadata";
@@ -16,9 +16,25 @@ import SpacePage from "./pages/SelectedSpace";
 import PhaserGame from "./pages/Spacepractice";
 import PhaserPractice from "./pages/PhaserPractice";
 import Game123 from "./components/Game123";
+import PhaserGamePractice from "./components/PhaserGamePractice"
+import { useEffect, useRef } from "react";
 
 function App() {
-  
+  const ws = useRef<WebSocket>();
+
+  useEffect(() => {
+    ws.current = new WebSocket('ws://localhost:3001');
+    ws.current.onopen = () => {
+      console.log('WebSocket connected');
+    };
+
+    return () => {
+      if (ws.current) {
+        ws.current.close();
+      }
+    };
+  }, []);
+
   return (
     <div>
     <Router>
@@ -39,6 +55,7 @@ function App() {
         <Route path="/selectedspace" element={<SpacePage />} />
         <Route path="/spacepractice" element={<PhaserGame />} />
         <Route path="/phaserpractice" element={<PhaserPractice />} />
+        <Route path="/phasergame" element={<PhaserGamePractice ws={ws.current!}/>} />
       </Routes>
     </Router>
     </div>
