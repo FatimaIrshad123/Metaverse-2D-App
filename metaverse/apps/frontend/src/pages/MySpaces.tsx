@@ -14,7 +14,7 @@ const MySpaces = () => {
     const handleSubmit = (e:any) => {
       e.preventDefault();
       localStorage.setItem('name', name);
-      navigate('/selectedspace');
+      navigate('/phasergame');
     }
 
     return (

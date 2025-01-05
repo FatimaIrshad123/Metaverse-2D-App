@@ -175,112 +175,33 @@ class GameScene extends Phaser.Scene {
   };
 
   updatePlayers() {
-    // Logic to update avatars and positions in the Phaser scene
-    console.log('Updating players:', this.users);
+    // Remove sprites for users who left
+    this.otherPlayers.getChildren().forEach((player) => {
+      const typedPlayer = player as Phaser.Physics.Arcade.Sprite & { userId: string };
+      if (!this.users.has(typedPlayer.userId)) {
+        typedPlayer.destroy();
+      }
+    });
+  
+    // Update or create sprites for all users
+    this.users.forEach((user, userId) => {
+      if (userId === this.currentUser?.userId) return; // Skip current user's avatar
+  
+      let playerSprite = this.otherPlayers.getChildren().find(
+        (p: any) => p.userId === userId
+      ) as Phaser.Physics.Arcade.Sprite & { userId: string };
+  
+      if (!playerSprite) {
+        // Create new sprite for the user
+        playerSprite = this.otherPlayers.create(user.x, user.y, 'avatar') as Phaser.Physics.Arcade.Sprite & { userId: string };
+        playerSprite.userId = userId;
+      } else {
+        // Update existing sprite's position
+        playerSprite.setPosition(user.x, user.y);
+      }
+    });
   }
-
-
 }
-  /*handleWebSocketMessage = (message: any) => {
-    
-    switch (message.type) {
-      case 'space-joined':
-        this.currentUser({
-          x: message.payload.spawn.x,
-          y: message.payload.spawn.y,
-          userId: message.payload.spawn.id
-        })
-        const userMap = new Map([...this.users]);
-        message.payload.users.forEach((user: any) => {
-          console.log('user123',user)
-          userMap.set(user.id,{
-            x: message.payload.spawn.x,
-            y: message.payload.spawn.y,
-            userId: user.id
-          });
-        });
-        console.log('currentUser',this.currentUser)
-        this.users(userMap);
-        console.log('users',this.users)
-        console.log('usersMap',userMap)
-        break;
-
-      case 'user-joined':
-        this.users((prev:any) => {
-          const newUsers = new Map(prev);
-          newUsers.set(message.payload.userId, {
-            x: message.payload.x,
-            y: message.payload.y,
-            userId: message.payload.id
-          });
-          return newUsers;
-        });
-        break;
-
-      case 'movement':
-        console.log('movement')
-        this.users((prev:any) => {
-          const newUsers = new Map(prev);
-          const user = newUsers.get(message.payload.userId);
-          if (user) {
-            user.x = message.payload.x;
-            user.y = message.payload.y;
-            newUsers.set(message.payload.userId, user);
-          }
-          return newUsers;
-        });
-        break;
-
-      case 'movement-rejected':
-        console.log('movement-rejected',message.payload)
-        this.currentUser((prev: any) => ({
-          ...prev,
-          x: message.payload.x,
-          y: message.payload.y
-        }));
-        console.log('currentUser123',this.currentUser)
-        break;
-
-      case 'user-left':
-        this.users((prev:any) => {
-          const newUsers = new Map(prev);
-          newUsers.delete(message.payload.userId);
-          return newUsers;
-        });
-        break;
-    }
-  };
-  handleWebSocketMessage(message: any) {
-    switch (message.type) {
-      case 'user-joined':
-        const newPlayer = this.otherPlayers.create(message.payload.x, message.payload.y, 'avatar');
-        console.log('newPlayer',newPlayer)
-        this.users.set(message.payload.userId, { x: message.payload.x, y: message.payload.y, userId: message.payload.userId });
-        break;
-
-      case 'movement':
-        const user = this.users.get(message.payload.userId);
-        if (user) {
-          user.x = message.payload.x;
-          user.y = message.payload.y;
-
-          const player = this.otherPlayers.getChildren().find((p: any) => p.userId === user.userId);
-          if (player) {
-            console.log(player)
-          }
-        }
-        break;
-
-      case 'user-left':
-        this.users.delete(message.payload.userId);
-        const playerToRemove = this.otherPlayers.getChildren().find((p: any) => p.userId === message.payload.userId);
-        if (playerToRemove) {
-          playerToRemove.destroy();
-        }
-        break;
-    }
-  }*/
-
 
 const PhaserGamePractice: React.FC<{ ws: WebSocket }> = ({ ws }) => {
   const gameContainerRef = useRef<HTMLDivElement>(null);
@@ -310,16 +231,7 @@ const PhaserGamePractice: React.FC<{ ws: WebSocket }> = ({ ws }) => {
 
   return <div ref={gameContainerRef} style={{ width: sizes.width, height: sizes.height }} >
     <div className="p-4" tabIndex={0}>
-        <h1 className="text-2xl font-bold mb-4">Arena</h1>
-        <div className="mb-4">
-          <p className="text-sm text-gray-600">Token: </p>
-          <p className="text-sm text-gray-600">Space ID: </p>
-          <p className="text-sm text-gray-600">Connected Users: </p>
-        </div>
-        <div className="border rounded-lg overflow-hidden">
-          
-        </div>
-        <p className="mt-2 text-sm text-gray-500">Use arrow keys to move your avatar</p>
+      
     </div>
   </div>;
 };
