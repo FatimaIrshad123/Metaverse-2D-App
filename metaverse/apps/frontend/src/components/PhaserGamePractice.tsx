@@ -16,7 +16,7 @@ class GameScene extends Phaser.Scene {
   
   constructor(ws: WebSocket) {
     super('GameScene');
-    this.ws = ws; // Pass the WebSocket instance
+    this.ws = ws;
     this.users = new Map();
     this.currentUser = null;
     this.users = new Map();
@@ -38,7 +38,7 @@ class GameScene extends Phaser.Scene {
     this.otherPlayers = this.physics.add.group();
 
     let token = localStorage.getItem('token')
-  let spaceId = localStorage.getItem('spaceId')
+    let spaceId = localStorage.getItem('spaceId')
  
     this.ws = new WebSocket('ws://localhost:3001');
 
@@ -48,7 +48,7 @@ class GameScene extends Phaser.Scene {
   }
 
   this.ws.onopen = () => {
-      console.log('Connected')
+    console.log('Connected')
     this.ws.send(JSON.stringify({
       type: 'join',
       payload: {
@@ -117,7 +117,6 @@ class GameScene extends Phaser.Scene {
             userId: user.id,
           });
         });
-        console.log('this.currentUser',this.currentUser)
         this.updatePlayers();
         break;
 
@@ -131,7 +130,6 @@ class GameScene extends Phaser.Scene {
         break;
 
       case 'movement':
-        console.log('movement')
         const user = this.users.get(message.payload.userId);
         if (user) {
           user.x = message.payload.x;
@@ -142,7 +140,6 @@ class GameScene extends Phaser.Scene {
         break;
 
       case 'movement-rejected':
-        console.log('movement-rejected')
         this.currentUser = {
           ...this.currentUser,
           x: message.payload.x,
@@ -160,7 +157,7 @@ class GameScene extends Phaser.Scene {
 
   handleMove = (newX: any, newY: any) => {
     if (!this.currentUser) return;
-    console.log('handlemove', newX, newY)
+
     const xDisplacement = Math.abs(this.currentUser.x - newX);
     const yDisplacement = Math.abs(this.currentUser.y - newY);
 
@@ -218,7 +215,7 @@ const PhaserGamePractice: React.FC<{ ws: WebSocket }> = ({ ws }) => {
           debug: true,
         },
       },
-      scene: [new GameScene(ws)], // Pass WebSocket instance
+      scene: [new GameScene(ws)],
       parent: gameContainerRef.current ?? undefined,
     };
 
@@ -229,11 +226,7 @@ const PhaserGamePractice: React.FC<{ ws: WebSocket }> = ({ ws }) => {
     };
   }, [ws]);
 
-  return <div ref={gameContainerRef} style={{ width: sizes.width, height: sizes.height }} >
-    <div className="p-4" tabIndex={0}>
-      
-    </div>
-  </div>;
+  return <div ref={gameContainerRef} style={{ width: sizes.width, height: sizes.height }} />
 };
 
 export default PhaserGamePractice;

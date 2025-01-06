@@ -1,62 +1,66 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 
-const Arena = () => {
+export default function Game () {
   const canvasRef = useRef<any>(null);
-  const wsRef = useRef<any>(null);
-  const [currentUser, setCurrentUser] = useState<any>({});
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [users, setUsers] = useState(new Map());
-  const [params, setParams] = useState({ token: '', spaceId: '' });
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token') || localStorage.getItem('token') || '';
-    const spaceId = urlParams.get('spaceId') || localStorage.getItem('spaceId') || '';
-    setParams({ token, spaceId });
+  let token = localStorage.getItem('token')
+  let spaceId = localStorage.getItem('spaceId')
+  const ws = React.useRef<any>();
 
-    wsRef.current = new WebSocket('ws://localhost:3001',token); // Replace with your WS_URL
-    //console.log('wsRef.current',wsRef.current)
-    wsRef.current.onopen = () => {
-      
-      wsRef.current.send(JSON.stringify({
-        type: 'join',
-        payload: {
-          spaceId,
-          token
-        }
-      }));
-    };
+useEffect (() => {
+  let token = localStorage.getItem('token')
+  let spaceId = localStorage.getItem('spaceId')
+ 
+  ws.current = new WebSocket('ws://localhost:3001');
 
-    wsRef.current.onmessage = (event: any) => {
-      const message = JSON.parse(event.data);
-      console.log('message',message)
-      handleWebSocketMessage(message);
-    };
+  if (!token || !spaceId) {
+    console.error('Missing token, spaceId, or userId in localStorage');
+    return;
+  }
 
-    return () => {
-      if (wsRef.current) {
-        wsRef.current.close();
+  ws.current.onopen = () => {
+      console.log('Connected')
+    ws.current.send(JSON.stringify({
+      type: 'join',
+      payload: {
+        spaceId,
+        token,
       }
-    };
+    }));
+  };
+
+  ws.current.onmessage = (event: any) => {
+    const message = JSON.parse(event.data);
+    console.log('message',message)
+    handleWebSocketMessage(message)
+  };
+  
+  return () => {
+    if (ws.current) {
+      ws.current.close();
+    }
+  };
   }, []);
 
   const handleWebSocketMessage = (message: any) => {
+    
     switch (message.type) {
       case 'space-joined':
-        console.log('message.payload',message.payload)
-        console.log({
-            x: message.payload.spawn.x,
-            y: message.payload.spawn.y,
-            userId: message.payload.userId
-          })
         setCurrentUser({
           x: message.payload.spawn.x,
           y: message.payload.spawn.y,
-          userId: message.payload.userId
-        });
-        
-        const userMap = new Map();
+          userId: message.payload.spawn.id
+        })
+        const userMap = new Map([...users]);
         message.payload.users.forEach((user: any) => {
-          userMap.set(user.userId, user);
+          console.log('user123',user)
+          userMap.set(user.id,{
+            x: message.payload.spawn.x,
+            y: message.payload.spawn.y,
+            userId: user.id
+          });
         });
         setUsers(userMap);
         break;
@@ -67,7 +71,7 @@ const Arena = () => {
           newUsers.set(message.payload.userId, {
             x: message.payload.x,
             y: message.payload.y,
-            userId: message.payload.userId
+            userId: message.payload.id
           });
           return newUsers;
         });
@@ -103,17 +107,21 @@ const Arena = () => {
         break;
     }
   };
-
+  
+  
   const handleMove = (newX: any, newY: any) => {
     if (!currentUser) return;
-    wsRef.current.send(JSON.stringify({
-      type: 'move',
-      payload: {
-        x: newX,
-        y: newY,
-        userId: currentUser.userId
-      }
-    }));
+    const xDisplacement = Math.abs(currentUser.x - newX);
+    const yDisplacement = Math.abs(currentUser.y - newY);
+
+    if ((xDisplacement === 1 && yDisplacement === 0) || (xDisplacement === 0 && yDisplacement === 1)) {
+      ws.current.send(JSON.stringify({
+          type: 'move',
+          payload: { x: newX, y: newY }
+      }));
+  } else {
+      console.warn('Invalid move attempted:', { x: newX, y: newY });
+  }
   };
 
   useEffect(() => {
@@ -136,13 +144,7 @@ const Arena = () => {
       ctx.lineTo(canvas.width, i);
       ctx.stroke();
     }
-
-    console.log("before curerntusert")
-    console.log(currentUser)
-    // Draw current user
     if (currentUser && currentUser.x) {
-        console.log("drawing myself")
-        console.log(currentUser)
       ctx.beginPath();
       ctx.fillStyle = '#FF6B6B';
       ctx.arc(currentUser.x * 50, currentUser.y * 50, 20, 0, Math.PI * 2);
@@ -155,11 +157,8 @@ const Arena = () => {
 
     // Draw other users
     users.forEach(user => {
-    if (!user.x) {
-        return
-    }
-    console.log("drawing other user")
-    console.log(user)
+      if (!user.x) {return}
+    
       ctx.beginPath();
       ctx.fillStyle = '#4ECDC4';
       ctx.arc(user.x * 50, user.y * 50, 20, 0, Math.PI * 2);
@@ -170,6 +169,7 @@ const Arena = () => {
       ctx.fillText(`User ${user.userId}`, user.x * 50, user.y * 50 + 40);
     });
   }, [currentUser, users]);
+
 
   const handleKeyDown = (e: any) => {
     if (!currentUser) return;
@@ -190,15 +190,14 @@ const Arena = () => {
         break;
     }
   };
-console.log("user.size", users.size)
-console.log('currentuser', currentUser)
+  
   return (
     <div className="p-4" onKeyDown={handleKeyDown} tabIndex={0}>
         <h1 className="text-2xl font-bold mb-4">Arena</h1>
         <div className="mb-4">
-          <p className="text-sm text-gray-600">Token: {params.token}</p>
-          <p className="text-sm text-gray-600">Space ID: {params.spaceId}</p>
-          <p className="text-sm text-gray-600">Connected Users: {users.size + (currentUser ? 1 : 0)}</p>
+          <p className="text-sm text-gray-600">Token: {token}</p>
+          <p className="text-sm text-gray-600">Space ID: {spaceId}</p>
+          <p className="text-sm text-gray-600">Connected Users: {users.size}</p>
         </div>
         <div className="border rounded-lg overflow-hidden">
           <canvas
@@ -210,7 +209,5 @@ console.log('currentuser', currentUser)
         </div>
         <p className="mt-2 text-sm text-gray-500">Use arrow keys to move your avatar</p>
     </div>
-  );
-};
-
-export default Arena;
+  )
+}

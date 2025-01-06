@@ -6,7 +6,6 @@ import UserDashboard from "./pages/UserDashboard";
 import MySpaces from "./pages/MySpaces";
 import Space from "./components/Space";
 import CreateSpace from "./pages/CreateSpace";
-//import Arena from "./components/Game";
 import AvatarPage from "./pages/Avatar";
 import CreateAvatar from "./pages/CreateAvatar";
 import MetadataPage from "./pages/UpdateMetadata";
@@ -15,7 +14,7 @@ import UserMetadataPage from "./pages/UserMetadata";
 import SpacePage from "./pages/SelectedSpace";
 import PhaserGame from "./pages/Spacepractice";
 import PhaserPractice from "./pages/PhaserPractice";
-import Game123 from "./components/Game123";
+import Game from "./components/Game";
 import PhaserGamePractice from "./components/PhaserGamePractice"
 import { useEffect, useRef } from "react";
 
@@ -46,7 +45,7 @@ function App() {
         <Route path="/spaces" element={<MySpaces />} />
         <Route path="/space" element={<Space />} />
         <Route path="/createspace" element={<CreateSpace />}/>
-        <Route path="/game" element={<Game123 />} />
+        <Route path="/game" element={<Game />} />
         <Route path="/avatar" element={<AvatarPage />} />
         <Route path="/createavatar" element={<CreateAvatar />} />
         <Route path="/updatemetadata" element={<MetadataPage />} />
